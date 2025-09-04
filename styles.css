@@ -1,0 +1,110 @@
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #39b54a;
+}
+
+.container {
+    background-color: white;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 500px;
+    padding: 40px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.logo {
+    width: 150px;
+    margin-bottom: 20px;
+}
+
+.image-container {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.image-container img {
+    width: 100%;
+    max-width: 300px;
+}
+
+.login-btn, .register-btn {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    border-radius: 5px;
+    font-size: 1.2rem;
+    margin: 10px 0;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.login-btn {
+    background-color: #39b54a;
+    color: white;
+    border: none;
+}
+
+.login-btn:hover {
+    background-color: #2e9c3f;
+}
+
+.register-btn {
+    background-color: white;
+    color: #39b54a;
+    border: 2px solid #39b54a;
+}
+
+.register-btn:hover {
+    background-color: #39b54a;
+    color: white;
+}
+
+.social-login {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.social-login button {
+    border: none;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.facebook-btn {
+    color: #3b5998;
+    font-size: 0.9rem;
+    padding: 6px 10px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.facebook-btn img, .google-btn img {
+    width: 16px;
+    margin-right: 6px;
+}
+
+ul.produtos-lista {
+    list-style: none;
+    padding: 0;
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+ul li {
+    margin: 10px 0;
+}
