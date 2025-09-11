@@ -1,34 +1,27 @@
-* {
+body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     font-family: Arial, sans-serif;
-}
-
-body {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: #39b54a; /* Cor de fundo verde */
+    background-color: #39b54a;
 }
 
 .container {
     background-color: white;
     border-radius: 10px;
     width: 100%;
-    max-width: 500px; /* Aumentando a largura da div principal */
-    padding: 40px; /* Aumentando o preenchimento */
+    max-width: 500px;
+    padding: 40px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     text-align: center;
 }
 
-.header {
-    margin-bottom: 20px;
-}
-
 .logo {
-    width: 150px; /* Ajuste de tamanho do logo */
+    width: 150px;
     margin-bottom: 20px;
 }
 
@@ -42,18 +35,15 @@ body {
     max-width: 300px;
 }
 
-.login-section {
-    margin-top: 20px;
-}
-
 .login-btn, .register-btn {
     display: block;
     width: 100%;
-    padding: 15px; /* Aumentando a altura dos botões */
+    padding: 15px;
     border-radius: 5px;
     font-size: 1.2rem;
     margin: 10px 0;
     cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
 }
 
 .login-btn {
@@ -62,10 +52,19 @@ body {
     border: none;
 }
 
+.login-btn:hover {
+    background-color: #2e9c3f;
+}
+
 .register-btn {
     background-color: white;
     color: #39b54a;
     border: 2px solid #39b54a;
+}
+
+.register-btn:hover {
+    background-color: #39b54a;
+    color: white;
 }
 
 .social-login {
@@ -82,19 +81,30 @@ body {
     align-items: center;
     padding: 10px;
     cursor: pointer;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-}
-
-.social-login img {
-    width: 20px;
-    margin-right: 10px;
-}
-
-.google-btn {
-    color: #db4437;
 }
 
 .facebook-btn {
     color: #3b5998;
+    font-size: 0.9rem;
+    padding: 6px 10px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.facebook-btn img, .google-btn img {
+    width: 16px;
+    margin-right: 6px;
+}
+
+ul.produtos-lista {
+    list-style: none;
+    padding: 0;
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+ul li {
+    margin: 10px 0;
 }

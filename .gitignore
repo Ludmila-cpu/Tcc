@@ -1,0 +1,77 @@
+# Dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# Testing
+/coverage
+
+# Production
+/dist
+/dist-ssr
+*.local
+
+# Misc
+.DS_Store
+.env.local
+.env.development.local
+
+# Vite / caching
+/.vite
+.vite/
+
+# TypeScript
+*.tsbuildinfo
+
+# Caches
+.cache
+.parcel-cache
+
+.env.test.local
+.env.production.local
+
+# Environment files (sensitive)
+.env
+.env.*
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# OS generated
+Thumbs.db
+desktop.ini
+
+# Deployment / hosting
+.vercel
+.netlify
+.firebase
+.firebase/
+
+# Coverage
+/coverage
+/coverage/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
