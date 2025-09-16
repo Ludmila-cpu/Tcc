@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Carrinho</title>
     <link rel="stylesheet" href="styles.css" />
 </head>
+
 <body>
     <div class="container">
         <h2>Seu Carrinho</h2>
@@ -19,36 +21,47 @@
             <button class="register-btn" id="btn-limpar" style="margin-top:8px;">Limpar Carrinho</button>
         </div>
         <script>
-            function formatBRL(v){ return 'R$ ' + v.toFixed(2).replace('.',','); }
+            function formatBRL(v) { return 'R$ ' + v.toFixed(2).replace('.', ','); }
             const raw = localStorage.getItem('cart');
             const cart = raw ? JSON.parse(raw) : [];
             const cartContents = document.getElementById('cart-contents');
             const cartList = document.getElementById('cart-list');
             const cartResumo = document.getElementById('cart-resumo');
-            if(cart.length===0){
+            if (cart.length === 0) {
                 cartContents.innerHTML = '<p>Seu carrinho está vazio.</p>';
             } else {
-                cartContents.style.display='none';
-                cartResumo.style.display='block';
-                let total=0;
-                cart.forEach(item=>{
+                cartContents.style.display = 'none';
+                cartResumo.style.display = 'block';
+                let total = 0;
+                cart.forEach((item, idx) => {
                     const li = document.createElement('li');
                     const subtotal = item.qty * item.price;
                     total += subtotal;
-                    li.textContent = `${item.name} — ${item.qty} x R$ ${item.price.toFixed(2).replace('.',',')} = ${formatBRL(subtotal)}`;
+                    li.innerHTML = `${item.name} — ${item.qty} x R$ ${item.price.toFixed(2).replace('.', ',')} = ${formatBRL(subtotal)} <button class="remove-item" data-idx="${idx}">Remover</button>`;
                     cartList.appendChild(li);
                 });
                 document.getElementById('cart-total').textContent = formatBRL(total);
+
+                // attach remove handlers
+                document.querySelectorAll('.remove-item').forEach(btn=>{
+                    btn.addEventListener('click', (e)=>{
+                        const idx = Number(e.currentTarget.dataset.idx);
+                        cart.splice(idx,1);
+                        localStorage.setItem('cart', JSON.stringify(cart));
+                        location.reload();
+                    });
+                });
             }
 
-            document.getElementById('btn-finalizar').addEventListener('click', ()=>{
+            document.getElementById('btn-finalizar').addEventListener('click', () => {
                 window.location.href = 'pagamento.html';
             });
-            document.getElementById('btn-limpar').addEventListener('click', ()=>{
+            document.getElementById('btn-limpar').addEventListener('click', () => {
                 localStorage.removeItem('cart');
                 location.reload();
             });
         </script>
     </div>
 </body>
+
 </html>

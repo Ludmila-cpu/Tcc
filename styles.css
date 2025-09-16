@@ -166,3 +166,17 @@ ul li {
     margin-bottom: 10px;
     font-size: 1.05rem;
 }
+
+.remove-item {
+    margin-left: 12px;
+    background: transparent;
+    border: 1px solid #e74c3c;
+    color: #e74c3c;
+    padding: 4px 8px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+.remove-item:hover{
+    background: #e74c3c;
+    color: white;
+}
