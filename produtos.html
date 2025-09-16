@@ -62,7 +62,7 @@
                 return 'R$ ' + v.toFixed(2).replace('.', ',');
             }
 
-            function updateLineSubtotal(li, i){
+            function updateLineSubtotal(li, i) {
                 const qtyInput = li.querySelector('.produto-quantidade');
                 const subtotalEl = li.querySelector('.produto-subtotal');
                 const qty = Number(qtyInput.value) || 0;
@@ -78,7 +78,7 @@
                     const qtyInput = li.querySelector('.produto-quantidade');
                     let qty = Number(qtyInput.value) || 0;
                     // enforce min 1 if checked
-                    if(checkbox.checked && qty < 1) {
+                    if (checkbox.checked && qty < 1) {
                         qty = 1;
                         qtyInput.value = 1;
                     }
@@ -94,19 +94,19 @@
             }
 
             // wire events
-            document.querySelectorAll('.produto-item').forEach((li, i)=>{
+            document.querySelectorAll('.produto-item').forEach((li, i) => {
                 const checkbox = li.querySelector('input[type="checkbox"]');
                 const qtyInput = li.querySelector('.produto-quantidade');
                 // initial state: disable qty if unchecked
                 qtyInput.disabled = !checkbox.checked;
-                checkbox.addEventListener('change', ()=>{
+                checkbox.addEventListener('change', () => {
                     // if checked and qty is 0, set to 1
-                    if(checkbox.checked && (Number(qtyInput.value) || 0) < 1) qtyInput.value = 1;
+                    if (checkbox.checked && (Number(qtyInput.value) || 0) < 1) qtyInput.value = 1;
                     updateTotal();
                 });
-                qtyInput.addEventListener('input', ()=>{
+                qtyInput.addEventListener('input', () => {
                     // prevent negative
-                    if(Number(qtyInput.value) < 0) qtyInput.value = 0;
+                    if (Number(qtyInput.value) < 0) qtyInput.value = 0;
                     updateTotal();
                 });
             });

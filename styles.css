@@ -20,6 +20,18 @@ body {
     text-align: center;
 }
 
+
+    .cart-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 12px;
+    }
+
+    .cart-title-img {
+        width: 36px;
+        height: 36px;
+    }
 .logo {
     width: 150px;
     margin-bottom: 20px;
