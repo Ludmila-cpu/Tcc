@@ -1,37 +1,41 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Vereco - Login</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
+
 <body>
   <div class="container">
     <div class="header">
-      <img src="Imagem2.svg" alt="Vereco Logo" class="logo" />
+      <img src="src/assets/Imagem2.svg" alt="Vereco Logo" class="logo" />
       <div class="image-container">
-        <img src="Imagem1.svg" alt="Shopping Illustration" />
+        <img src="src/assets/Imagem1.svg" alt="Shopping Illustration" />
       </div>
     </div>
     <div class="login-section">
       <form id="form-login">
-        <input type="text" id="usuario" placeholder="Usuário" required style="margin-bottom: 10px; width: 100%; padding: 10px;" />
-        <input type="password" id="senha" placeholder="Senha" required style="margin-bottom: 20px; width: 100%; padding: 10px;" />
+        <input type="text" id="usuario" placeholder="Usuário" required
+          style="margin-bottom: 10px; width: 100%; padding: 10px;" />
+        <input type="password" id="senha" placeholder="Senha" required
+          style="margin-bottom: 20px; width: 100%; padding: 10px;" />
         <button type="submit" class="login-btn">Entrar</button>
       </form>
       <button class="register-btn" onclick="alert('Cadastro em breve...')">Registrar</button>
       <p>Ou entre com</p>
       <div class="social-login">
-        <button class="google-btn"><img src="logo-google-.png" alt="Google Icon" />Google</button>
-        <button class="facebook-btn"><img src="face.svg" alt="Facebook Icon" />Facebook</button>
+        <button class="google-btn"><img src="src/assets/logo-google-.png" alt="Google Icon" />Google</button>
+        <button class="facebook-btn"><img src="src/assets/face.svg" alt="Facebook Icon" />Facebook</button>
       </div>
     </div>
   </div>
 
   <script>
     // Função de login simulada
-    document.getElementById('form-login').addEventListener('submit', function(event) {
+    document.getElementById('form-login').addEventListener('submit', function (event) {
       event.preventDefault();
 
       const usuario = document.getElementById('usuario').value.trim();
@@ -46,4 +50,5 @@
     });
   </script>
 </body>
+
 </html>
