@@ -10,9 +10,27 @@
     <div class="container">
         <h2>Escolha seus produtos</h2>
         <ul class="produtos-lista">
-            <li><input type="checkbox" /> Tomate Orgânico</li>
-            <li><input type="checkbox" /> Alface Hidropônica</li>
-            <li><input type="checkbox" /> Mel Orgânico</li>
+            <li class="produto-item">
+                <label>
+                    <input type="checkbox" />
+                    <img src="src/assets/tomate.svg" alt="Tomate" class="produto-img" />
+                    <span class="produto-nome">Tomate Orgânico</span>
+                </label>
+            </li>
+            <li class="produto-item">
+                <label>
+                    <input type="checkbox" />
+                    <img src="src/assets/alface.svg" alt="Alface" class="produto-img" />
+                    <span class="produto-nome">Alface Hidropônica</span>
+                </label>
+            </li>
+            <li class="produto-item">
+                <label>
+                    <input type="checkbox" />
+                    <img src="src/assets/mel.svg" alt="Mel" class="produto-img" />
+                    <span class="produto-nome">Mel Orgânico</span>
+                </label>
+            </li>
         </ul>
         <button class="login-btn" onclick="window.location.href='carrinho.html'">Ir para o Carrinho</button>
     </div>

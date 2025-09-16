@@ -108,3 +108,22 @@ ul.produtos-lista {
 ul li {
     margin: 10px 0;
 }
+
+.produto-item label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.produto-img {
+    width: 64px;
+    height: 64px;
+    object-fit: cover;
+    border-radius: 8px;
+    background: #f6f6f6;
+}
+
+.produto-nome {
+    vertical-align: middle;
+    font-size: 1rem;
+}
