@@ -149,3 +149,20 @@ ul li {
     border: 1px solid #ddd;
     text-align: center;
 }
+
+.produto-preco {
+    margin-left: 8px;
+    color: #666;
+    font-size: 0.95rem;
+}
+
+.resumo {
+    margin-top: 16px;
+    text-align: left;
+}
+
+.total-line {
+    font-weight: 700;
+    margin-bottom: 10px;
+    font-size: 1.05rem;
+}

@@ -9,11 +9,46 @@
 <body>
     <div class="container">
         <h2>Seu Carrinho</h2>
-        <ul>
-            <li>Tomate Orgânico - 1kg</li>
-            <li>Alface Hidropônica - 1 un.</li>
-        </ul>
-        <button class="login-btn" onclick="window.location.href='pagamento.html'">Finalizar Compra</button>
+        <div id="cart-contents">
+            <p>Carregando itens do carrinho...</p>
+        </div>
+        <div id="cart-resumo" style="display:none;">
+            <ul id="cart-list"></ul>
+            <div class="total-line">Total: <span id="cart-total">R$ 0,00</span></div>
+            <button class="login-btn" id="btn-finalizar">Finalizar Compra</button>
+            <button class="register-btn" id="btn-limpar" style="margin-top:8px;">Limpar Carrinho</button>
+        </div>
+        <script>
+            function formatBRL(v){ return 'R$ ' + v.toFixed(2).replace('.',','); }
+            const raw = localStorage.getItem('cart');
+            const cart = raw ? JSON.parse(raw) : [];
+            const cartContents = document.getElementById('cart-contents');
+            const cartList = document.getElementById('cart-list');
+            const cartResumo = document.getElementById('cart-resumo');
+            if(cart.length===0){
+                cartContents.innerHTML = '<p>Seu carrinho está vazio.</p>';
+            } else {
+                cartContents.style.display='none';
+                cartResumo.style.display='block';
+                let total=0;
+                cart.forEach(item=>{
+                    const li = document.createElement('li');
+                    const subtotal = item.qty * item.price;
+                    total += subtotal;
+                    li.textContent = `${item.name} — ${item.qty} x R$ ${item.price.toFixed(2).replace('.',',')} = ${formatBRL(subtotal)}`;
+                    cartList.appendChild(li);
+                });
+                document.getElementById('cart-total').textContent = formatBRL(total);
+            }
+
+            document.getElementById('btn-finalizar').addEventListener('click', ()=>{
+                window.location.href = 'pagamento.html';
+            });
+            document.getElementById('btn-limpar').addEventListener('click', ()=>{
+                localStorage.removeItem('cart');
+                location.reload();
+            });
+        </script>
     </div>
 </body>
 </html>

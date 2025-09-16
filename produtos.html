@@ -17,6 +17,7 @@
                     <input type="checkbox" />
                     <img src="src/assets/tomate.svg" alt="Tomate" class="produto-img" />
                     <span class="produto-nome">Tomate Orgânico</span>
+                    <span class="produto-preco">R$ 6,50 / kg</span>
                 </label>
                 <input type="number" class="produto-quantidade" min="0" value="1" aria-label="Quantidade de Tomate" />
             </li>
@@ -25,6 +26,7 @@
                     <input type="checkbox" />
                     <img src="src/assets/alface.svg" alt="Alface" class="produto-img" />
                     <span class="produto-nome">Alface Hidropônica</span>
+                    <span class="produto-preco">R$ 4,00 / un</span>
                 </label>
                 <input type="number" class="produto-quantidade" min="0" value="1" aria-label="Quantidade de Alface" />
             </li>
@@ -33,11 +35,63 @@
                     <input type="checkbox" />
                     <img src="src/assets/mel.svg" alt="Mel" class="produto-img" />
                     <span class="produto-nome">Mel Orgânico</span>
+                    <span class="produto-preco">R$ 18,00 / frasco</span>
                 </label>
                 <input type="number" class="produto-quantidade" min="0" value="1" aria-label="Quantidade de Mel" />
             </li>
         </ul>
-        <button class="login-btn" onclick="window.location.href='carrinho.html'">Ir para o Carrinho</button>
+        <div class="resumo">
+            <div class="total-line">Total estimado: <span id="total-estimado">R$ 0,00</span></div>
+            <button id="ir-carrinho" class="login-btn">Ir para o Carrinho</button>
+        </div>
+        
+        <script>
+            // Map product index -> price in BRL
+            const prices = [6.5, 4.0, 18.0];
+
+            function formatBRL(v){
+                return 'R$ ' + v.toFixed(2).replace('.',',');
+            }
+
+            function updateTotal(){
+                const items = document.querySelectorAll('.produto-item');
+                let total = 0;
+                items.forEach((li, i)=>{
+                    const checkbox = li.querySelector('input[type="checkbox"]');
+                    const qty = Number(li.querySelector('.produto-quantidade').value) || 0;
+                    if(checkbox.checked && qty>0){
+                        total += prices[i] * qty;
+                    }
+                });
+                document.getElementById('total-estimado').textContent = formatBRL(total);
+                return total;
+            }
+
+            document.querySelectorAll('.produto-quantidade, .produto-item input[type="checkbox"]').forEach(el=>{
+                el.addEventListener('input', updateTotal);
+                el.addEventListener('change', updateTotal);
+            });
+
+            // initialize
+            updateTotal();
+
+            document.getElementById('ir-carrinho').addEventListener('click', ()=>{
+                const items = document.querySelectorAll('.produto-item');
+                const cart = [];
+                items.forEach((li, i)=>{
+                    const checkbox = li.querySelector('input[type="checkbox"]');
+                    const qty = Number(li.querySelector('.produto-quantidade').value) || 0;
+                    if(checkbox.checked && qty>0){
+                        const name = li.querySelector('.produto-nome').textContent.trim();
+                        cart.push({id:i, name, qty, price: prices[i]});
+                    }
+                });
+                // save cart to localStorage
+                localStorage.setItem('cart', JSON.stringify(cart));
+                // redirect to carrinho
+                window.location.href = 'carrinho.html';
+            });
+        </script>
     </div>
 </body>
 
