@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Produtos</title>
     <link rel="stylesheet" href="styles.css" />
 </head>
+
 <body>
     <div class="container">
         <h2>Escolha seus produtos</h2>
@@ -16,6 +18,7 @@
                     <img src="src/assets/tomate.svg" alt="Tomate" class="produto-img" />
                     <span class="produto-nome">Tomate Orgânico</span>
                 </label>
+                <input type="number" class="produto-quantidade" min="0" value="1" aria-label="Quantidade de Tomate" />
             </li>
             <li class="produto-item">
                 <label>
@@ -23,6 +26,7 @@
                     <img src="src/assets/alface.svg" alt="Alface" class="produto-img" />
                     <span class="produto-nome">Alface Hidropônica</span>
                 </label>
+                <input type="number" class="produto-quantidade" min="0" value="1" aria-label="Quantidade de Alface" />
             </li>
             <li class="produto-item">
                 <label>
@@ -30,9 +34,11 @@
                     <img src="src/assets/mel.svg" alt="Mel" class="produto-img" />
                     <span class="produto-nome">Mel Orgânico</span>
                 </label>
+                <input type="number" class="produto-quantidade" min="0" value="1" aria-label="Quantidade de Mel" />
             </li>
         </ul>
         <button class="login-btn" onclick="window.location.href='carrinho.html'">Ir para o Carrinho</button>
     </div>
 </body>
+
 </html>
