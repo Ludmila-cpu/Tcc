@@ -156,6 +156,12 @@ ul li {
     font-size: 0.95rem;
 }
 
+.produto-subtotal{
+    margin-top:6px;
+    color:#444;
+    font-size:0.9rem;
+}
+
 .resumo {
     margin-top: 16px;
     text-align: left;
@@ -193,4 +199,13 @@ ul li {
 #cart-list li .remove-item {
     float: right;
     margin-right: 0;
+}
+
+/* mobile: stack product details and move quantity under name */
+@media (max-width: 520px){
+    .container{ padding: 24px; max-width: 420px }
+    .produto-item{ flex-direction: column; align-items:flex-start; gap:8px }
+    .produto-item label{ width:100% }
+    .produto-quantidade{ width:100%; max-width:160px }
+    .resumo .login-btn{ padding:12px }
 }

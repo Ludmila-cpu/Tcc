@@ -12,30 +12,39 @@
     <div class="container">
         <h2>Escolha seus produtos</h2>
         <ul class="produtos-lista">
-            <li class="produto-item">
+            <li class="produto-item" data-index="0">
                 <label>
                     <input type="checkbox" />
                     <img src="src/assets/tomate.svg" alt="Tomate" class="produto-img" />
-                    <span class="produto-nome">Tomate Orgânico</span>
-                    <span class="produto-preco">R$ 6,50 / kg</span>
+                    <div>
+                        <div class="produto-nome">Tomate Orgânico</div>
+                        <div class="produto-preco">R$ 6,50 / kg</div>
+                        <div class="produto-subtotal" aria-hidden="true"></div>
+                    </div>
                 </label>
                 <input type="number" class="produto-quantidade" min="0" value="1" aria-label="Quantidade de Tomate" />
             </li>
-            <li class="produto-item">
+            <li class="produto-item" data-index="1">
                 <label>
                     <input type="checkbox" />
                     <img src="src/assets/alface.svg" alt="Alface" class="produto-img" />
-                    <span class="produto-nome">Alface Hidropônica</span>
-                    <span class="produto-preco">R$ 4,00 / un</span>
+                    <div>
+                        <div class="produto-nome">Alface Hidropônica</div>
+                        <div class="produto-preco">R$ 4,00 / un</div>
+                        <div class="produto-subtotal" aria-hidden="true"></div>
+                    </div>
                 </label>
                 <input type="number" class="produto-quantidade" min="0" value="1" aria-label="Quantidade de Alface" />
             </li>
-            <li class="produto-item">
+            <li class="produto-item" data-index="2">
                 <label>
                     <input type="checkbox" />
                     <img src="src/assets/mel.svg" alt="Mel" class="produto-img" />
-                    <span class="produto-nome">Mel Orgânico</span>
-                    <span class="produto-preco">R$ 18,00 / frasco</span>
+                    <div>
+                        <div class="produto-nome">Mel Orgânico</div>
+                        <div class="produto-preco">R$ 18,00 / frasco</div>
+                        <div class="produto-subtotal" aria-hidden="true"></div>
+                    </div>
                 </label>
                 <input type="number" class="produto-quantidade" min="0" value="1" aria-label="Quantidade de Mel" />
             </li>
@@ -44,46 +53,76 @@
             <div class="total-line">Total estimado: <span id="total-estimado">R$ 0,00</span></div>
             <button id="ir-carrinho" class="login-btn">Ir para o Carrinho</button>
         </div>
-        
+
         <script>
             // Map product index -> price in BRL
             const prices = [6.5, 4.0, 18.0];
 
-            function formatBRL(v){
-                return 'R$ ' + v.toFixed(2).replace('.',',');
+            function formatBRL(v) {
+                return 'R$ ' + v.toFixed(2).replace('.', ',');
             }
 
-            function updateTotal(){
+            function updateLineSubtotal(li, i){
+                const qtyInput = li.querySelector('.produto-quantidade');
+                const subtotalEl = li.querySelector('.produto-subtotal');
+                const qty = Number(qtyInput.value) || 0;
+                const subtotal = prices[i] * qty;
+                subtotalEl.textContent = qty > 0 ? `Subtotal: ${formatBRL(subtotal)}` : '';
+            }
+
+            function updateTotal() {
                 const items = document.querySelectorAll('.produto-item');
                 let total = 0;
-                items.forEach((li, i)=>{
+                items.forEach((li, i) => {
                     const checkbox = li.querySelector('input[type="checkbox"]');
-                    const qty = Number(li.querySelector('.produto-quantidade').value) || 0;
-                    if(checkbox.checked && qty>0){
+                    const qtyInput = li.querySelector('.produto-quantidade');
+                    let qty = Number(qtyInput.value) || 0;
+                    // enforce min 1 if checked
+                    if(checkbox.checked && qty < 1) {
+                        qty = 1;
+                        qtyInput.value = 1;
+                    }
+                    // disable qty input if not checked
+                    qtyInput.disabled = !checkbox.checked;
+                    if (checkbox.checked && qty > 0) {
                         total += prices[i] * qty;
                     }
+                    updateLineSubtotal(li, i);
                 });
                 document.getElementById('total-estimado').textContent = formatBRL(total);
                 return total;
             }
 
-            document.querySelectorAll('.produto-quantidade, .produto-item input[type="checkbox"]').forEach(el=>{
-                el.addEventListener('input', updateTotal);
-                el.addEventListener('change', updateTotal);
+            // wire events
+            document.querySelectorAll('.produto-item').forEach((li, i)=>{
+                const checkbox = li.querySelector('input[type="checkbox"]');
+                const qtyInput = li.querySelector('.produto-quantidade');
+                // initial state: disable qty if unchecked
+                qtyInput.disabled = !checkbox.checked;
+                checkbox.addEventListener('change', ()=>{
+                    // if checked and qty is 0, set to 1
+                    if(checkbox.checked && (Number(qtyInput.value) || 0) < 1) qtyInput.value = 1;
+                    updateTotal();
+                });
+                qtyInput.addEventListener('input', ()=>{
+                    // prevent negative
+                    if(Number(qtyInput.value) < 0) qtyInput.value = 0;
+                    updateTotal();
+                });
             });
 
             // initialize
             updateTotal();
 
-            document.getElementById('ir-carrinho').addEventListener('click', ()=>{
+            document.getElementById('ir-carrinho').addEventListener('click', () => {
                 const items = document.querySelectorAll('.produto-item');
                 const cart = [];
-                items.forEach((li, i)=>{
+                items.forEach((li, i) => {
                     const checkbox = li.querySelector('input[type="checkbox"]');
                     const qty = Number(li.querySelector('.produto-quantidade').value) || 0;
-                    if(checkbox.checked && qty>0){
+                    if (checkbox.checked && qty > 0) {
                         const name = li.querySelector('.produto-nome').textContent.trim();
-                        cart.push({id:i, name, qty, price: prices[i]});
+                        cart.push({ id: i, name, qty, price: prices[i] });
                     }
                 });
                 // save cart to localStorage
