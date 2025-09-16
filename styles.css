@@ -169,14 +169,28 @@ ul li {
 
 .remove-item {
     margin-left: 12px;
-    background: transparent;
-    border: 1px solid #e74c3c;
-    color: #e74c3c;
-    padding: 4px 8px;
-    border-radius: 6px;
+    background: #e74c3c;
+    border: none;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 8px;
     cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 2px 6px rgba(231,76,60,0.25);
 }
 .remove-item:hover{
-    background: #e74c3c;
-    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 12px rgba(231,76,60,0.3);
+}
+
+/* ensure list items have space for the button on small screens */
+.produto-item, #cart-list li {
+    position: relative;
+}
+
+#cart-list li .remove-item {
+    float: right;
+    margin-right: 0;
 }
