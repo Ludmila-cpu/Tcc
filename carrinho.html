@@ -15,7 +15,7 @@
             <p>Carregando itens do carrinho...</p>
         </div>
         <div id="cart-resumo" style="display:none;">
-            <ul id="cart-list"></ul>
+            <div id="cart-list"></div>
             <div class="total-line">Total: <span id="cart-total">R$ 0,00</span></div>
             <button class="login-btn" id="btn-finalizar">Finalizar Compra</button>
             <button class="register-btn" id="btn-limpar" style="margin-top:8px;">Limpar Carrinho</button>
@@ -29,29 +29,117 @@
             const cartResumo = document.getElementById('cart-resumo');
             if (cart.length === 0) {
                 cartContents.innerHTML = '<p>Seu carrinho está vazio.</p>';
+                cartResumo.style.display = 'none';
             } else {
                 cartContents.style.display = 'none';
                 cartResumo.style.display = 'block';
                 let total = 0;
+                cartList.innerHTML = '';
                 cart.forEach((item, idx) => {
-                    const li = document.createElement('li');
+                    const row = document.createElement('div');
+                    row.className = 'cart-item';
                     const subtotal = item.qty * item.price;
                     total += subtotal;
-                    li.innerHTML = `${item.name} — ${item.qty} x R$ ${item.price.toFixed(2).replace('.', ',')} = ${formatBRL(subtotal)} <button class="remove-item" data-idx="${idx}">Remover</button>`;
-                    cartList.appendChild(li);
+                    // determine image by id if exists
+                    let imgSrc = '';
+                    try{ imgSrc = `src/assets/${item.id===0? 'tomate.svg' : item.id===1? 'alface.svg' : 'mel.svg'}` }catch(e){}
+                    row.innerHTML = `
+                        <img class="cart-img" src="${imgSrc}" alt="${item.name}" />
+                        <div class="cart-info">
+                            <div class="cart-name">${item.name}</div>
+                            <div class="cart-price">R$ ${item.price.toFixed(2).replace('.',',')} each</div>
+                        </div>
+                        <div class="cart-controls">
+                            <input type="number" class="cart-qty" min="1" value="${item.qty}" data-idx="${idx}" />
+                            <div class="cart-subtotal">${formatBRL(subtotal)}</div>
+                            <button class="remove-item" data-idx="${idx}">Remover</button>
+                        </div>
+                    `;
+                    cartList.appendChild(row);
                 });
                 document.getElementById('cart-total').textContent = formatBRL(total);
 
-                // attach remove handlers
-                document.querySelectorAll('.remove-item').forEach(btn=>{
-                    btn.addEventListener('click', (e)=>{
+                // attach dynamic handlers (remove & qty change)
+                cartList.querySelectorAll('.remove-item').forEach(btn=>{
+                    btn.addEventListener('click', e=>{
                         const idx = Number(e.currentTarget.dataset.idx);
                         cart.splice(idx,1);
                         localStorage.setItem('cart', JSON.stringify(cart));
-                        location.reload();
+                        renderCart();
+                    });
+                });
+                cartList.querySelectorAll('.cart-qty').forEach(inp=>{
+                    inp.addEventListener('input', e=>{
+                        const idx = Number(e.currentTarget.dataset.idx);
+                        let v = Number(e.currentTarget.value) || 1;
+                        if(v < 1) v = 1;
+                        e.currentTarget.value = v;
+                        cart[idx].qty = v;
+                        localStorage.setItem('cart', JSON.stringify(cart));
+                        renderCart();
                     });
                 });
             }
+            
+            function renderCart(){
+                const raw2 = localStorage.getItem('cart');
+                const c = raw2 ? JSON.parse(raw2) : [];
+                if(c.length === 0){
+                    cartContents.innerHTML = '<p>Seu carrinho está vazio.</p>';
+                    cartResumo.style.display = 'none';
+                    cartContents.style.display = 'block';
+                    return;
+                }
+                cartContents.style.display = 'none';
+                cartResumo.style.display = 'block';
+                cartList.innerHTML = '';
+                let total2 = 0;
+                c.forEach((item, idx)=>{
+                    const row = document.createElement('div');
+                    row.className = 'cart-item';
+                    const subtotal = item.qty * item.price;
+                    total2 += subtotal;
+                    let imgSrc = `src/assets/${item.id===0? 'tomate.svg' : item.id===1? 'alface.svg' : 'mel.svg'}`;
+                    row.innerHTML = `
+                        <img class="cart-img" src="${imgSrc}" alt="${item.name}" />
+                        <div class="cart-info">
+                            <div class="cart-name">${item.name}</div>
+                            <div class="cart-price">R$ ${item.price.toFixed(2).replace('.',',')} each</div>
+                        </div>
+                        <div class="cart-controls">
+                            <input type="number" class="cart-qty" min="1" value="${item.qty}" data-idx="${idx}" />
+                            <div class="cart-subtotal">${formatBRL(subtotal)}</div>
+                            <button class="remove-item" data-idx="${idx}">Remover</button>
+                        </div>
+                    `;
+                    cartList.appendChild(row);
+                });
+                document.getElementById('cart-total').textContent = formatBRL(total2);
+
+                // handlers
+                cartList.querySelectorAll('.remove-item').forEach(btn=>{
+                    btn.addEventListener('click', e=>{
+                        const idx = Number(e.currentTarget.dataset.idx);
+                        c.splice(idx,1);
+                        localStorage.setItem('cart', JSON.stringify(c));
+                        renderCart();
+                    });
+                });
+                cartList.querySelectorAll('.cart-qty').forEach(inp=>{
+                    inp.addEventListener('input', e=>{
+                        const idx = Number(e.currentTarget.dataset.idx);
+                        let v = Number(e.currentTarget.value) || 1;
+                        if(v < 1) v = 1;
+                        e.currentTarget.value = v;
+                        c[idx].qty = v;
+                        localStorage.setItem('cart', JSON.stringify(c));
+                        renderCart();
+                    });
+                });
+            }
+
+            // initial render
+            renderCart();
 
             document.getElementById('btn-finalizar').addEventListener('click', () => {
                 window.location.href = 'pagamento.html';
