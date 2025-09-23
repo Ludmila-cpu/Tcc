@@ -1,109 +1,79 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Carrinho</title>
+    <title>Carrinho - Vereco</title>
     <link rel="stylesheet" href="styles.css" />
 </head>
 
 <body>
-    <div class="container">
-        <div class="cart-header">
-            <img src="src/assets/cart.svg" alt="Carrinho" class="cart-title-img" />
-            <h2>Seu Carrinho</h2>
-        </div>
-        <div id="cart-contents">
-            <p>Carregando itens do carrinho...</p>
-        </div>
-        <div id="cart-resumo" style="display:none;">
-            <div id="cart-list"></div>
-            <div class="total-line">Total: <span id="cart-total">R$ 0,00</span></div>
-            <button class="login-btn" id="btn-finalizar">Finalizar Compra</button>
-            <button class="register-btn" id="btn-limpar" style="margin-top:8px;">Limpar Carrinho</button>
-        </div>
-        <script>
-            function formatBRL(v) { return 'R$ ' + v.toFixed(2).replace('.', ','); }
-            const raw = localStorage.getItem('cart');
-            const cart = raw ? JSON.parse(raw) : [];
-            const cartContents = document.getElementById('cart-contents');
-            const cartList = document.getElementById('cart-list');
-            const cartResumo = document.getElementById('cart-resumo');
-            if (cart.length === 0) {
-                cartContents.innerHTML = '<p>Seu carrinho está vazio.</p>';
-                cartResumo.style.display = 'none';
-            } else {
-                cartContents.style.display = 'none';
-                cartResumo.style.display = 'block';
-                let total = 0;
-                cartList.innerHTML = '';
-                cart.forEach((item, idx) => {
-                    const row = document.createElement('div');
-                    row.className = 'cart-item';
-                    const subtotal = item.qty * item.price;
-                    total += subtotal;
-                    // determine image by id if exists
-                    let imgSrc = '';
-                    try { imgSrc = `src/assets/${item.id === 0 ? 'tomate.svg' : item.id === 1 ? 'alface.svg' : 'mel.svg'}` } catch (e) { }
-                    row.innerHTML = `
-                        <img class="cart-img" src="${imgSrc}" alt="${item.name}" />
-                        <div class="cart-info">
-                            <div class="cart-name">${item.name}</div>
-                            <div class="cart-price">R$ ${item.price.toFixed(2).replace('.', ',')} each</div>
-                        </div>
-                        <div class="cart-controls">
-                            <input type="number" class="cart-qty" min="1" value="${item.qty}" data-idx="${idx}" />
-                            <div class="cart-subtotal">${formatBRL(subtotal)}</div>
-                            <button class="remove-item" data-idx="${idx}">Remover</button>
-                        </div>
-                    `;
-                    cartList.appendChild(row);
-                });
-                document.getElementById('cart-total').textContent = formatBRL(total);
+    <div class="site-container">
+        <nav class="home-nav">
+            <div class="nav-left">
+                <img src="src/assets/Imagem2.svg" alt="Vereco Logo" class="nav-logo" />
+                <ul class="nav-menu">
+                    <li><a href="home.html" class="nav-link">Início</a></li>
+                    <li><a href="produtos.html" class="nav-link">Produtos</a></li>
+                    <li><a href="#" class="nav-link">Sobre Nós</a></li>
+                </ul>
+            </div>
+            <div class="nav-right">
+                <button class="cart-btn" onclick="window.location.href='carrinho.html'">
+                    <img src="src/assets/cart.svg" alt="Carrinho" class="cart-icon" />
+                    <span id="cart-count">0</span>
+                </button>
+                <div class="user-menu">
+                    <img src="src/assets/user.svg" alt="Usuário" class="user-icon" />
+                    <span>Minha Conta</span>
+                </div>
+            </div>
+        </nav>
 
-                // attach dynamic handlers (remove & qty change)
-                cartList.querySelectorAll('.remove-item').forEach(btn => {
-                    btn.addEventListener('click', e => {
-                        const idx = Number(e.currentTarget.dataset.idx);
-                        cart.splice(idx, 1);
-                        localStorage.setItem('cart', JSON.stringify(cart));
-                        renderCart();
-                    });
-                });
-                cartList.querySelectorAll('.cart-qty').forEach(inp => {
-                    inp.addEventListener('input', e => {
-                        const idx = Number(e.currentTarget.dataset.idx);
-                        let v = Number(e.currentTarget.value) || 1;
-                        if (v < 1) v = 1;
-                        e.currentTarget.value = v;
-                        cart[idx].qty = v;
-                        localStorage.setItem('cart', JSON.stringify(cart));
-                        renderCart();
-                    });
-                });
-            }
+        <div class="page-header">
+            <h1>Seu Carrinho</h1>
+            <p>Revise seus itens e finalize a compra</p>
+        </div>
 
-            function renderCart() {
-                const raw2 = localStorage.getItem('cart');
-                const c = raw2 ? JSON.parse(raw2) : [];
-                if (c.length === 0) {
+        <div class="cart-main-container">
+            <div class="cart-header">
+                <img src="src/assets/cart.svg" alt="Carrinho" class="cart-title-img" />
+                <h2>Seu Carrinho</h2>
+            </div>
+            <div id="cart-contents">
+                <p>Carregando itens do carrinho...</p>
+            </div>
+            <div id="cart-resumo" style="display:none;">
+                <div id="cart-list"></div>
+                <div class="total-line">Total: <span id="cart-total">R$ 0,00</span></div>
+                <button class="login-btn" id="btn-finalizar">Finalizar Compra</button>
+                <button class="register-btn" id="btn-limpar" style="margin-top:8px;">Limpar Carrinho</button>
+            </div>
+            <script>
+                function formatBRL(v) { return 'R$ ' + v.toFixed(2).replace('.', ','); }
+                const raw = localStorage.getItem('cart');
+                const cart = raw ? JSON.parse(raw) : [];
+                const cartContents = document.getElementById('cart-contents');
+                const cartList = document.getElementById('cart-list');
+                const cartResumo = document.getElementById('cart-resumo');
+                if (cart.length === 0) {
                     cartContents.innerHTML = '<p>Seu carrinho está vazio.</p>';
                     cartResumo.style.display = 'none';
-                    cartContents.style.display = 'block';
-                    return;
-                }
-                cartContents.style.display = 'none';
-                cartResumo.style.display = 'block';
-                cartList.innerHTML = '';
-                let total2 = 0;
-                c.forEach((item, idx) => {
-                    const row = document.createElement('div');
-                    row.className = 'cart-item';
-                    const subtotal = item.qty * item.price;
-                    total2 += subtotal;
-                    let imgSrc = `src/assets/${item.id === 0 ? 'tomate.svg' : item.id === 1 ? 'alface.svg' : 'mel.svg'}`;
-                    row.innerHTML = `
+                } else {
+                    cartContents.style.display = 'none';
+                    cartResumo.style.display = 'block';
+                    let total = 0;
+                    cartList.innerHTML = '';
+                    cart.forEach((item, idx) => {
+                        const row = document.createElement('div');
+                        row.className = 'cart-item';
+                        const subtotal = item.qty * item.price;
+                        total += subtotal;
+                        // determine image by id if exists
+                        let imgSrc = '';
+                        try { imgSrc = `src/assets/${item.id === 0 ? 'tomate.svg' : item.id === 1 ? 'alface.svg' : 'mel.svg'}` } catch (e) { }
+                        row.innerHTML = `
                         <img class="cart-img" src="${imgSrc}" alt="${item.name}" />
                         <div class="cart-info">
                             <div class="cart-name">${item.name}</div>
@@ -115,44 +85,138 @@
                             <button class="remove-item" data-idx="${idx}">Remover</button>
                         </div>
                     `;
-                    cartList.appendChild(row);
-                });
-                document.getElementById('cart-total').textContent = formatBRL(total2);
-
-                // handlers
-                cartList.querySelectorAll('.remove-item').forEach(btn => {
-                    btn.addEventListener('click', e => {
-                        const idx = Number(e.currentTarget.dataset.idx);
-                        c.splice(idx, 1);
-                        localStorage.setItem('cart', JSON.stringify(c));
-                        renderCart();
+                        cartList.appendChild(row);
                     });
-                });
-                cartList.querySelectorAll('.cart-qty').forEach(inp => {
-                    inp.addEventListener('input', e => {
-                        const idx = Number(e.currentTarget.dataset.idx);
-                        let v = Number(e.currentTarget.value) || 1;
-                        if (v < 1) v = 1;
-                        e.currentTarget.value = v;
-                        c[idx].qty = v;
-                        localStorage.setItem('cart', JSON.stringify(c));
-                        renderCart();
+                    document.getElementById('cart-total').textContent = formatBRL(total);
+
+                    // attach dynamic handlers (remove & qty change)
+                    cartList.querySelectorAll('.remove-item').forEach(btn => {
+                        btn.addEventListener('click', e => {
+                            const idx = Number(e.currentTarget.dataset.idx);
+                            cart.splice(idx, 1);
+                            localStorage.setItem('cart', JSON.stringify(cart));
+                            renderCart();
+                        });
                     });
+                    cartList.querySelectorAll('.cart-qty').forEach(inp => {
+                        inp.addEventListener('input', e => {
+                            const idx = Number(e.currentTarget.dataset.idx);
+                            let v = Number(e.currentTarget.value) || 1;
+                            if (v < 1) v = 1;
+                            e.currentTarget.value = v;
+                            cart[idx].qty = v;
+                            localStorage.setItem('cart', JSON.stringify(cart));
+                            renderCart();
+                        });
+                    });
+                }
+
+                function renderCart() {
+                    const raw2 = localStorage.getItem('cart');
+                    const c = raw2 ? JSON.parse(raw2) : [];
+                    if (c.length === 0) {
+                        cartContents.innerHTML = '<p>Seu carrinho está vazio.</p>';
+                        cartResumo.style.display = 'none';
+                        cartContents.style.display = 'block';
+                        return;
+                    }
+                    cartContents.style.display = 'none';
+                    cartResumo.style.display = 'block';
+                    cartList.innerHTML = '';
+                    let total2 = 0;
+                    c.forEach((item, idx) => {
+                        const row = document.createElement('div');
+                        row.className = 'cart-item';
+                        const subtotal = item.qty * item.price;
+                        total2 += subtotal;
+                        let imgSrc = `src/assets/${item.id === 0 ? 'tomate.svg' : item.id === 1 ? 'alface.svg' : 'mel.svg'}`;
+                        row.innerHTML = `
+                        <img class="cart-img" src="${imgSrc}" alt="${item.name}" />
+                        <div class="cart-info">
+                            <div class="cart-name">${item.name}</div>
+                            <div class="cart-price">R$ ${item.price.toFixed(2).replace('.', ',')} each</div>
+                        </div>
+                        <div class="cart-controls">
+                            <input type="number" class="cart-qty" min="1" value="${item.qty}" data-idx="${idx}" />
+                            <div class="cart-subtotal">${formatBRL(subtotal)}</div>
+                            <button class="remove-item" data-idx="${idx}">Remover</button>
+                        </div>
+                    `;
+                        cartList.appendChild(row);
+                    });
+                    document.getElementById('cart-total').textContent = formatBRL(total2);
+
+                    // handlers
+                    cartList.querySelectorAll('.remove-item').forEach(btn => {
+                        btn.addEventListener('click', e => {
+                            const idx = Number(e.currentTarget.dataset.idx);
+                            c.splice(idx, 1);
+                            localStorage.setItem('cart', JSON.stringify(c));
+                            renderCart();
+                        });
+                    });
+                    cartList.querySelectorAll('.cart-qty').forEach(inp => {
+                        inp.addEventListener('input', e => {
+                            const idx = Number(e.currentTarget.dataset.idx);
+                            let v = Number(e.currentTarget.value) || 1;
+                            if (v < 1) v = 1;
+                            e.currentTarget.value = v;
+                            c[idx].qty = v;
+                            localStorage.setItem('cart', JSON.stringify(c));
+                            renderCart();
+                        });
+                    });
+                }
+
+                // initial render
+                renderCart();
+
+                document.getElementById('btn-finalizar').addEventListener('click', () => {
+                    window.location.href = 'pagamento.html';
                 });
-            }
+                document.getElementById('btn-limpar').addEventListener('click', () => {
+                    localStorage.removeItem('cart');
+                    location.reload();
+                });
 
-            // initial render
-            renderCart();
+                // Atualizar contador do carrinho
+                function updateCartCount() {
+                    const cartItems = JSON.parse(localStorage.getItem('cart') || '[]');
+                    document.getElementById('cart-count').textContent = cartItems.length;
+                }
+                updateCartCount();
+            </script>
 
-            document.getElementById('btn-finalizar').addEventListener('click', () => {
-                window.location.href = 'pagamento.html';
-            });
-            document.getElementById('btn-limpar').addEventListener('click', () => {
-                localStorage.removeItem('cart');
-                location.reload();
-            });
-        </script>
-    </div>
+            <footer class="site-footer">
+                <div class="footer-content">
+                    <div class="footer-section">
+                        <img src="src/assets/Imagem2.svg" alt="Vereco Logo" class="footer-logo" />
+                        <p>Produtos orgânicos de qualidade direto para sua mesa.</p>
+                    </div>
+                    <div class="footer-section">
+                        <h4>Links Úteis</h4>
+                        <ul>
+                            <li><a href="#">Sobre Nós</a></li>
+                            <li><a href="#">Como Comprar</a></li>
+                            <li><a href="#">Entregas</a></li>
+                            <li><a href="#">Contato</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-section">
+                        <h4>Contato</h4>
+                        <p>Email: contato@vereco.com.br</p>
+                        <p>Tel: (11) 9999-9999</p>
+                        <div class="social-icons">
+                            <a href="#"><img src="src/assets/face.svg" alt="Facebook" /></a>
+                            <a href="#"><img src="src/assets/instagram.svg" alt="Instagram" /></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    <p>&copy; 2025 Vereco. Todos os direitos reservados.</p>
+                </div>
+            </footer>
+        </div>
 </body>
 
 </html>
