@@ -1,25 +1,39 @@
-// Lista de produtos
+// Lista de produtos (Frutas e Legumes)
 const products = [
     {
         id: 1,
-        name: 'Ração Premium',
-        price: 89.90,
-        description: 'Ração premium para cães adultos de todas as raças',
-        image: 'src/assets/products/racao.jpg'
+        name: 'Maçã Orgânica',
+        price: 7.90,
+        description: 'Maçãs frescas e crocantes cultivadas sem agrotóxicos (500g)',
+        image: 'src/assets/products/apple.svg'
     },
     {
         id: 2,
-        name: 'Coleira Ajustável',
-        price: 29.90,
-        description: 'Coleira ajustável com fecho de segurança',
-        image: 'src/assets/products/coleira.jpg'
+        name: 'Banana Nanica',
+        price: 5.50,
+        description: 'Bananas maduras e doces ideais para lanches (1kg)',
+        image: 'src/assets/products/banana.svg'
     },
     {
         id: 3,
-        name: 'Brinquedo Interativo',
-        price: 39.90,
-        description: 'Brinquedo para estimular seu pet',
-        image: 'src/assets/products/brinquedo.jpg'
+        name: 'Cenoura',
+        price: 4.20,
+        description: 'Cenouras crocantes ricas em betacaroteno (500g)',
+        image: 'src/assets/products/carrot.svg'
+    },
+    {
+        id: 4,
+        name: 'Tomate Italiano',
+        price: 8.40,
+        description: 'Tomates suculentos ideais para molhos e saladas (500g)',
+        image: 'src/assets/products/tomato.svg'
+    },
+    {
+        id: 5,
+        name: 'Alface Crespa',
+        price: 3.90,
+        description: 'Folhas verdes e frescas para uma salada saudável (unidade)',
+        image: 'src/assets/products/lettuce.svg'
     }
 ];
 
