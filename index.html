@@ -80,19 +80,77 @@
 
     <script>
         const modal = document.getElementById('loginModal');
+        const googleBtn = document.querySelector('.google-btn');
+        const fbBtn = document.querySelector('.facebook-btn');
+        const navButtons = document.querySelector('.nav-buttons');
+
         function showLoginForm() { modal.style.display = 'flex'; }
         function closeLoginModal() { modal.style.display = 'none'; }
         window.onclick = function (event) { if (event.target === modal) closeLoginModal(); }
+
+        // Salva usuário simulado
+        function setCurrentUser(user) {
+            localStorage.setItem('currentUser', JSON.stringify(user));
+            renderUserMenu();
+        }
+
+        function getCurrentUser() {
+            try { return JSON.parse(localStorage.getItem('currentUser')) || null; } catch { return null; }
+        }
+
+        function logout() {
+            localStorage.removeItem('currentUser');
+            renderUserMenu();
+        }
+
+        function renderUserMenu() {
+            const user = getCurrentUser();
+            if (!navButtons) return;
+            if (user) {
+                navButtons.innerHTML = `
+                    <div class="user-auth">
+                        <span class="user-welcome">Olá, ${user.name}</span>
+                        <button class="nav-btn" id="logoutBtn">Sair</button>
+                    </div>`;
+                document.getElementById('logoutBtn').addEventListener('click', logout);
+                closeLoginModal();
+            } else {
+                navButtons.innerHTML = `
+                    <button class="nav-btn" onclick="showLoginForm()">Entrar</button>
+                    <a class="nav-btn register" href="cadastro.html">Cadastrar</a>`;
+            }
+        }
+
         document.getElementById('loginForm').addEventListener('submit', function (e) {
             e.preventDefault();
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value.trim();
             if (email && password) {
+                setCurrentUser({ provider: 'email', email, name: email.split('@')[0] });
                 window.location.href = 'produtos.html';
             } else {
                 alert('Por favor, preencha todos os campos!');
             }
         });
+
+        // Simulações de login social
+        if (googleBtn) {
+            googleBtn.addEventListener('click', () => {
+                // Aqui futuramente integrar SDK Google
+                setCurrentUser({ provider: 'google', email: 'usuario@gmail.com', name: 'Usuário Google' });
+                window.location.href = 'produtos.html';
+            });
+        }
+        if (fbBtn) {
+            fbBtn.addEventListener('click', () => {
+                // Aqui futuramente integrar Facebook OAuth
+                setCurrentUser({ provider: 'facebook', email: 'usuario@facebook.com', name: 'Usuário Facebook' });
+                window.location.href = 'produtos.html';
+            });
+        }
+
+        // Render inicial
+        renderUserMenu();
     </script>
 </body>
 </html>
