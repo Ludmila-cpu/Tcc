@@ -5,35 +5,35 @@ const products = [
         name: 'Maçã Orgânica',
         price: 7.90,
         description: 'Maçãs frescas e crocantes cultivadas sem agrotóxicos (500g)',
-        image: 'src/assets/products/apple.svg'
+        image: 'https://images.unsplash.com/photo-1567306226416-28f0efdc88ce?auto=format&fit=crop&w=600&q=80'
     },
     {
         id: 2,
         name: 'Banana Nanica',
         price: 5.50,
         description: 'Bananas maduras e doces ideais para lanches (1kg)',
-        image: 'src/assets/products/banana.svg'
+        image: 'https://images.unsplash.com/photo-1574226516831-e1dff420e43e?auto=format&fit=crop&w=600&q=80'
     },
     {
         id: 3,
         name: 'Cenoura',
         price: 4.20,
         description: 'Cenouras crocantes ricas em betacaroteno (500g)',
-        image: 'src/assets/products/carrot.svg'
+        image: 'https://images.unsplash.com/photo-1582515073490-dc84f5ed9b32?auto=format&fit=crop&w=600&q=80'
     },
     {
         id: 4,
         name: 'Tomate Italiano',
         price: 8.40,
         description: 'Tomates suculentos ideais para molhos e saladas (500g)',
-        image: 'src/assets/products/tomato.svg'
+        image: 'https://images.unsplash.com/photo-1561136594-7f68413bfae3?auto=format&fit=crop&w=600&q=80'
     },
     {
         id: 5,
         name: 'Alface Crespa',
         price: 3.90,
         description: 'Folhas verdes e frescas para uma salada saudável (unidade)',
-        image: 'src/assets/products/lettuce.svg'
+        image: 'https://images.unsplash.com/photo-1542834369-f10ebf06d3cb?auto=format&fit=crop&w=600&q=80'
     }
 ];
 
@@ -70,7 +70,7 @@ function addToCart(productId) {
 function createProductCard(product) {
     return `
         <div class="product-card">
-            <img src="${product.image}" alt="${product.name}" class="product-image">
+            <img src="${product.image}" alt="${product.name}" class="product-image" loading="lazy">
             <div class="product-info">
                 <h3 class="product-title">${product.name}</h3>
                 <p class="product-description">${product.description}</p>
