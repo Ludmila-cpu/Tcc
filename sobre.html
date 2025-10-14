@@ -46,9 +46,71 @@
           Obrigado por visitar e fazer parte dessa jornada rumo a uma alimentação mais consciente! 🌱
         </p>
       </section>
+        <section class="about-section" style="margin-top:2.5rem;">
+          <h2>Informações da Vereco</h2>
+          <p>A <strong>Vereco</strong> nasce com o compromisso de tornar o acesso a alimentos orgânicos simples, transparente e confiável. Nosso foco é conectar diretamente produtores que adotam práticas responsáveis a consumidores que valorizam origem e frescor.</p>
+          <div style="display:grid; gap:1.2rem; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); margin:2rem 0;">
+            <div style="background:#f8f9fa; padding:1.2rem 1.1rem; border-radius:12px;">
+              <h3 style="margin:.2rem 0 0.6rem; font-size:1.05rem; color:#2d2d2d;">Contato Oficial</h3>
+              <p style="margin:.4rem 0; color:#555;">Email: <a href="mailto:contato@vereco.com.br" style="color:#39b54a; text-decoration:none;">contato@vereco.com.br</a></p>
+              <p style="margin:.4rem 0; color:#555;">Telefone: (11) 9999-9999</p>
+              <p style="margin:.4rem 0; color:#555;">Horário: Seg - Sex, 08h às 18h</p>
+            </div>
+            <div style="background:#f8f9fa; padding:1.2rem 1.1rem; border-radius:12px;">
+              <h3 style="margin:.2rem 0 0.6rem; font-size:1.05rem; color:#2d2d2d;">Endereço</h3>
+              <p style="margin:.4rem 0; color:#555;">Rua das Sementes, 123<br/>São Paulo - SP</p>
+              <p style="margin:.4rem 0; color:#555;">CEP 01000-000</p>
+            </div>
+            <div style="background:#f8f9fa; padding:1.2rem 1.1rem; border-radius:12px;">
+              <h3 style="margin:.2rem 0 0.6rem; font-size:1.05rem; color:#2d2d2d;">Nossa Missão</h3>
+              <p style="margin:.4rem 0; color:#555;">Promover um ecossistema alimentar mais justo, reduzindo desperdício e valorizando a origem limpa dos produtos.</p>
+              <p style="margin:.4rem 0; color:#555;">Focamos em tecnologia acessível, transparência de cadeia e educação nutricional.</p>
+            </div>
+          </div>
+          <p>Em breve lançaremos funcionalidades como rastreabilidade por lote, comparação de sazonalidade e assinatura de cestas personalizadas.</p>
+          <p>Se quiser saber mais sobre parcerias ou expansão, utilize nosso email oficial ou acompanhe as próximas atualizações.</p>
+        </section>
     </main>
   </div>
 
   <script src="script.js"></script>
+    <script>
+      (function(){
+        const form = document.getElementById('contactForm');
+        if(!form) return;
+        const email = document.getElementById('contactEmail');
+        const phone = document.getElementById('contactPhone');
+        const success = document.getElementById('contactSuccess');
+        const emailMsg = document.querySelector('.input-msg[data-for="contactEmail"]');
+        const phoneMsg = document.querySelector('.input-msg[data-for="contactPhone"]');
+
+        function validateEmail(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v); }
+        function onlyDigits(v){ return v.replace(/\D/g,''); }
+        function formatPhone(v){
+          const d = onlyDigits(v).slice(0,11);
+          if(d.length <= 10){
+            return d.replace(/(\d{2})(\d{4})(\d{0,4})/, function(_,a,b,c){ return c?`(${a}) ${b}-${c}`:`(${a}) ${b}`; });
+          }
+          return d.replace(/(\d{2})(\d{5})(\d{0,4})/, function(_,a,b,c){ return c?`(${a}) ${b}-${c}`:`(${a}) ${b}`; });
+        }
+
+        phone.addEventListener('input', e=> { e.target.value = formatPhone(e.target.value); });
+
+        form.addEventListener('submit', e => {
+          e.preventDefault();
+          let ok = true;
+          if(!validateEmail(email.value.trim())){ emailMsg.style.display='block'; ok=false; } else emailMsg.style.display='none';
+          const rawDigits = onlyDigits(phone.value);
+          if(!(rawDigits.length === 10 || rawDigits.length === 11)){ phoneMsg.style.display='block'; ok=false; } else phoneMsg.style.display='none';
+          if(!ok) return;
+          const entries = JSON.parse(localStorage.getItem('contacts')||'[]');
+          entries.push({ email: email.value.trim(), phone: phone.value.trim(), ts: Date.now() });
+          localStorage.setItem('contacts', JSON.stringify(entries));
+          success.style.display='block';
+          form.reset();
+          setTimeout(()=>{ success.style.display='none'; }, 5000);
+        });
+      })();
+    </script>
 </body>
 </html>
