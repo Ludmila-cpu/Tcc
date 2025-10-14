@@ -1,71 +1,116 @@
 const express = require('express');
 const auth = require('../middleware/auth');
+const Order = require('../models/Order');
+const Cart = require('../models/Cart');
+
 const router = express.Router();
 
-// Modelo temporário de pedidos (você pode criar um modelo próprio depois)
-const orders = new Map();
-
-// Criar novo pedido
-router.post('/', auth, (req, res) => {
+// Criar novo pedido a partir do carrinho
+router.post('/', auth, async (req, res) => {
     try {
-        const userId = req.user._id.toString();
-        const userOrders = orders.get(userId) || [];
-        const newOrder = {
-            id: Date.now().toString(),
-            items: req.body.items,
-            total: req.body.total,
-            status: 'pending',
-            createdAt: new Date()
-        };
-        userOrders.push(newOrder);
-        orders.set(userId, userOrders);
-        res.status(201).json(newOrder);
+        const { shippingAddress, paymentMethod } = req.body;
+        
+        // Buscar carrinho do usuário
+        const cart = await Cart.findOne({ user: req.user._id }).populate('items.product');
+        
+        if (!cart || cart.items.length === 0) {
+            return res.status(400).json({ msg: 'Carrinho vazio' });
+        }
+
+        // Criar pedido
+        const order = new Order({
+            user: req.user._id,
+            items: cart.items.map(item => ({
+                product: item.product._id,
+                name: item.product.name,
+                quantity: item.quantity,
+                price: item.price
+            })),
+            totalPrice: cart.totalPrice,
+            shippingAddress,
+            paymentMethod
+        });
+
+        await order.save();
+
+        // Limpar carrinho após criar pedido
+        cart.items = [];
+        await cart.save();
+
+        res.status(201).json(order);
     } catch (err) {
-        res.status(500).json({ msg: 'Erro ao criar pedido' });
+        res.status(500).json({ msg: 'Erro ao criar pedido', error: err.message });
     }
 });
 
 // Listar pedidos do usuário
-router.get('/', auth, (req, res) => {
+router.get('/', auth, async (req, res) => {
     try {
-        const userOrders = orders.get(req.user._id.toString()) || [];
-        res.json(userOrders);
+        const orders = await Order.find({ user: req.user._id })
+            .populate('items.product')
+            .sort({ createdAt: -1 });
+        res.json(orders);
     } catch (err) {
-        res.status(500).json({ msg: 'Erro ao buscar pedidos' });
+        res.status(500).json({ msg: 'Erro ao buscar pedidos', error: err.message });
     }
 });
 
 // Buscar pedido específico
-router.get('/:id', auth, (req, res) => {
+router.get('/:id', auth, async (req, res) => {
     try {
-        const userOrders = orders.get(req.user._id.toString()) || [];
-        const order = userOrders.find(o => o.id === req.params.id);
+        const order = await Order.findOne({ 
+            _id: req.params.id, 
+            user: req.user._id 
+        }).populate('items.product');
+        
         if (!order) {
             return res.status(404).json({ msg: 'Pedido não encontrado' });
         }
         res.json(order);
     } catch (err) {
-        res.status(500).json({ msg: 'Erro ao buscar pedido' });
+        res.status(500).json({ msg: 'Erro ao buscar pedido', error: err.message });
     }
 });
 
 // Atualizar status do pedido (admin)
-router.put('/:id/status', auth, (req, res) => {
+router.put('/:id/status', auth, async (req, res) => {
     try {
         if (!req.user.isAdmin) {
             return res.status(403).json({ msg: 'Acesso negado' });
         }
-        const { userId, status } = req.body;
-        const userOrders = orders.get(userId) || [];
-        const orderIndex = userOrders.findIndex(o => o.id === req.params.id);
-        if (orderIndex === -1) {
+        
+        const { status } = req.body;
+        const order = await Order.findByIdAndUpdate(
+            req.params.id,
+            { status },
+            { new: true }
+        ).populate('items.product');
+
+        if (!order) {
             return res.status(404).json({ msg: 'Pedido não encontrado' });
         }
-        userOrders[orderIndex].status = status;
-        orders.set(userId, userOrders);
-        res.json(userOrders[orderIndex]);
+
+        res.json(order);
     } catch (err) {
-        res.status(500).json({ msg: 'Erro ao atualizar status' });
+        res.status(500).json({ msg: 'Erro ao atualizar status', error: err.message });
+    }
+});
+
+// Listar todos os pedidos (admin)
+router.get('/admin/all', auth, async (req, res) => {
+    try {
+        if (!req.user.isAdmin) {
+            return res.status(403).json({ msg: 'Acesso negado' });
+        }
+        
+        const orders = await Order.find()
+            .populate('user', 'name email')
+            .populate('items.product')
+            .sort({ createdAt: -1 });
+        
+        res.json(orders);
+    } catch (err) {
+        res.status(500).json({ msg: 'Erro ao buscar pedidos', error: err.message });
     }
 });
 

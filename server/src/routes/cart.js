@@ -1,70 +1,125 @@
 const express = require('express');
 const auth = require('../middleware/auth');
+const Cart = require('../models/Cart');
+const Product = require('../models/Product');
+
 const router = express.Router();
 
-// Modelo temporário do carrinho (você pode criar um modelo próprio depois)
-const carts = new Map();
-
 // Obter carrinho do usuário
-router.get('/', auth, (req, res) => {
+router.get('/', auth, async (req, res) => {
     try {
-        const cart = carts.get(req.user._id.toString()) || [];
+        let cart = await Cart.findOne({ user: req.user._id }).populate('items.product');
+        if (!cart) {
+            cart = new Cart({ user: req.user._id, items: [] });
+            await cart.save();
+        }
         res.json(cart);
     } catch (err) {
-        res.status(500).json({ msg: 'Erro ao buscar carrinho' });
+        res.status(500).json({ msg: 'Erro ao buscar carrinho', error: err.message });
     }
 });
 
 // Adicionar item ao carrinho
-router.post('/add', auth, (req, res) => {
+router.post('/add', auth, async (req, res) => {
     try {
-        const userId = req.user._id.toString();
-        const cart = carts.get(userId) || [];
-        cart.push(req.body);
-        carts.set(userId, cart);
+        const { productId, quantity } = req.body;
+        
+        const product = await Product.findById(productId);
+        if (!product) {
+            return res.status(404).json({ msg: 'Produto não encontrado' });
+        }
+
+        let cart = await Cart.findOne({ user: req.user._id });
+        if (!cart) {
+            cart = new Cart({ user: req.user._id, items: [] });
+        }
+
+        // Verificar se produto já está no carrinho
+        const existingItemIndex = cart.items.findIndex(
+            item => item.product.toString() === productId
+        );
+
+        if (existingItemIndex > -1) {
+            // Atualizar quantidade
+            cart.items[existingItemIndex].quantity += quantity || 1;
+        } else {
+            // Adicionar novo item
+            cart.items.push({
+                product: productId,
+                quantity: quantity || 1,
+                price: product.price
+            });
+        }
+
+        await cart.save();
+        await cart.populate('items.product');
         res.status(201).json(cart);
     } catch (err) {
-        res.status(500).json({ msg: 'Erro ao adicionar item' });
+        res.status(500).json({ msg: 'Erro ao adicionar item', error: err.message });
     }
 });
 
 // Remover item do carrinho
-router.delete('/remove/:id', auth, (req, res) => {
+router.delete('/remove/:productId', auth, async (req, res) => {
     try {
-        const userId = req.user._id.toString();
-        const cart = carts.get(userId) || [];
-        const newCart = cart.filter(item => item.id !== req.params.id);
-        carts.set(userId, newCart);
-        res.json(newCart);
+        const cart = await Cart.findOne({ user: req.user._id });
+        if (!cart) {
+            return res.status(404).json({ msg: 'Carrinho não encontrado' });
+        }
+
+        cart.items = cart.items.filter(
+            item => item.product.toString() !== req.params.productId
+        );
+
+        await cart.save();
+        await cart.populate('items.product');
+        res.json(cart);
     } catch (err) {
-        res.status(500).json({ msg: 'Erro ao remover item' });
+        res.status(500).json({ msg: 'Erro ao remover item', error: err.message });
     }
 });
 
 // Atualizar quantidade de um item
-router.put('/update/:id', auth, (req, res) => {
+router.put('/update/:productId', auth, async (req, res) => {
     try {
-        const userId = req.user._id.toString();
-        const cart = carts.get(userId) || [];
-        const itemIndex = cart.findIndex(item => item.id === req.params.id);
-        if (itemIndex > -1) {
-            cart[itemIndex].quantity = req.body.quantity;
-            carts.set(userId, cart);
+        const { quantity } = req.body;
+        const cart = await Cart.findOne({ user: req.user._id });
+        
+        if (!cart) {
+            return res.status(404).json({ msg: 'Carrinho não encontrado' });
         }
+
+        const itemIndex = cart.items.findIndex(
+            item => item.product.toString() === req.params.productId
+        );
+
+        if (itemIndex > -1) {
+            if (quantity <= 0) {
+                cart.items.splice(itemIndex, 1);
+            } else {
+                cart.items[itemIndex].quantity = quantity;
+            }
+        }
+
+        await cart.save();
+        await cart.populate('items.product');
         res.json(cart);
     } catch (err) {
-        res.status(500).json({ msg: 'Erro ao atualizar item' });
+        res.status(500).json({ msg: 'Erro ao atualizar item', error: err.message });
     }
 });
 
 // Limpar carrinho
-router.delete('/clear', auth, (req, res) => {
+router.delete('/clear', auth, async (req, res) => {
     try {
-        const userId = req.user._id.toString();
-        carts.delete(userId);
-        res.json({ msg: 'Carrinho limpo' });
+        const cart = await Cart.findOne({ user: req.user._id });
+        if (cart) {
+            cart.items = [];
+            await cart.save();
+        }
+        res.json({ msg: 'Carrinho limpo', cart });
     } catch (err) {
-        res.status(500).json({ msg: 'Erro ao limpar carrinho' });
+        res.status(500).json({ msg: 'Erro ao limpar carrinho', error: err.message });
     }
 });
 
