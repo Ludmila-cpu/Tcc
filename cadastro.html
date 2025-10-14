@@ -41,49 +41,49 @@
             </form>
             <p>Já tem uma conta? <a href="login.html" class="login-link">Entrar</a></p>
         </div>
-  </div>
+    </div>
 
-  <script src="api.js"></script>
-  <script>
-    document.getElementById('form-cadastro').addEventListener('submit', async function(event) {
-      event.preventDefault();
+    <script src="api.js"></script>
+    <script>
+        document.getElementById('form-cadastro').addEventListener('submit', async function (event) {
+            event.preventDefault();
 
-      const nome = document.getElementById('nome').value.trim();
-      const email = document.getElementById('email').value.trim();
-      const usuario = document.getElementById('usuario').value.trim();
-      const senha = document.getElementById('senha').value.trim();
-      const confirmarSenha = document.getElementById('confirmar-senha').value.trim();
-      const telefone = document.getElementById('telefone').value.trim();
+            const nome = document.getElementById('nome').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const usuario = document.getElementById('usuario').value.trim();
+            const senha = document.getElementById('senha').value.trim();
+            const confirmarSenha = document.getElementById('confirmar-senha').value.trim();
+            const telefone = document.getElementById('telefone').value.trim();
 
-      // Validações básicas
-      if (!nome || !email || !usuario || !senha || !confirmarSenha || !telefone) {
-        alert('Por favor, preencha todos os campos.');
-        return;
-      }
+            // Validações básicas
+            if (!nome || !email || !usuario || !senha || !confirmarSenha || !telefone) {
+                alert('Por favor, preencha todos os campos.');
+                return;
+            }
 
-      if (senha !== confirmarSenha) {
-        alert('As senhas não correspondem.');
-        return;
-      }
+            if (senha !== confirmarSenha) {
+                alert('As senhas não correspondem.');
+                return;
+            }
 
-      if (senha.length < 6) {
-        alert('A senha deve ter pelo menos 6 caracteres.');
-        return;
-      }
+            if (senha.length < 6) {
+                alert('A senha deve ter pelo menos 6 caracteres.');
+                return;
+            }
 
-      try {
-        await window.API.Auth.register({
-          name: nome,
-          email: email,
-          password: senha
+            try {
+                await window.API.Auth.register({
+                    name: nome,
+                    email: email,
+                    password: senha
+                });
+                alert('Cadastro realizado com sucesso!');
+                window.location.href = 'produtos.html';
+            } catch (error) {
+                alert('Erro ao cadastrar: ' + error.message);
+            }
         });
-        alert('Cadastro realizado com sucesso!');
-        window.location.href = 'produtos.html';
-      } catch (error) {
-        alert('Erro ao cadastrar: ' + error.message);
-      }
-    });
-  </script>
+    </script>
 </body>
 
 </html>

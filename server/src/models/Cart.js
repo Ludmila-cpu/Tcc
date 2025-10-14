@@ -36,7 +36,7 @@ const cartSchema = new mongoose.Schema({
 });
 
 // Atualiza total do carrinho antes de salvar
-cartSchema.pre('save', function(next) {
+cartSchema.pre('save', function (next) {
     this.totalPrice = this.items.reduce((total, item) => {
         return total + (item.price * item.quantity);
     }, 0);

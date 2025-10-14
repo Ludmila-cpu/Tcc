@@ -128,17 +128,17 @@ async function renderProducts() {
         try {
             // Mostrar loading
             productList.innerHTML = '<p style="text-align:center; padding:2rem; color:#666;">Carregando produtos...</p>';
-            
+
             // Buscar produtos da API
             if (window.API) {
                 products = await window.API.Products.getAll();
             }
-            
+
             if (products.length === 0) {
                 productList.innerHTML = '<p style="text-align:center; padding:2rem; color:#666;">Nenhum produto disponível no momento.</p>';
                 return;
             }
-            
+
             productList.innerHTML = products.map(createProductCard).join('');
         } catch (error) {
             console.error('Erro ao carregar produtos:', error);
@@ -153,7 +153,7 @@ function renderCart() {
     const cartTotal = document.getElementById('cart-total');
     const cartContents = document.getElementById('cart-contents');
     const cartResumo = document.getElementById('cart-resumo');
-    
+
     if (cartList && cartTotal) {
         if (cart.length === 0) {
             cartContents.innerHTML = '<p>Seu carrinho está vazio</p>';
@@ -184,16 +184,16 @@ function checkout() {
 }
 
 // Inicializa a página
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     // Inicializa produtos se estiver na página de produtos
     renderProducts();
-    
+
     // Inicializa carrinho se estiver na página do carrinho
     renderCart();
-    
+
     // Atualiza contador do carrinho em todas as páginas
     updateCartCount();
-    
+
     // Se houver um botão de finalizar compra, adiciona o evento
     const btnFinalizar = document.getElementById('btn-finalizar');
     if (btnFinalizar) {

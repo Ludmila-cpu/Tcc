@@ -23,7 +23,7 @@ router.get('/', auth, async (req, res) => {
 router.post('/add', auth, async (req, res) => {
     try {
         const { productId, quantity } = req.body;
-        
+
         const product = await Product.findById(productId);
         if (!product) {
             return res.status(404).json({ msg: 'Produto não encontrado' });
@@ -84,7 +84,7 @@ router.put('/update/:productId', auth, async (req, res) => {
     try {
         const { quantity } = req.body;
         const cart = await Cart.findOne({ user: req.user._id });
-        
+
         if (!cart) {
             return res.status(404).json({ msg: 'Carrinho não encontrado' });
         }

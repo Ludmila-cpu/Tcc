@@ -60,7 +60,7 @@ const orderSchema = new mongoose.Schema({
     }
 });
 
-orderSchema.pre('save', function(next) {
+orderSchema.pre('save', function (next) {
     this.updatedAt = Date.now();
     next();
 });

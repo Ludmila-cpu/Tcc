@@ -9,10 +9,10 @@ const router = express.Router();
 router.post('/', auth, async (req, res) => {
     try {
         const { shippingAddress, paymentMethod } = req.body;
-        
+
         // Buscar carrinho do usuário
         const cart = await Cart.findOne({ user: req.user._id }).populate('items.product');
-        
+
         if (!cart || cart.items.length === 0) {
             return res.status(400).json({ msg: 'Carrinho vazio' });
         }
@@ -58,11 +58,11 @@ router.get('/', auth, async (req, res) => {
 // Buscar pedido específico
 router.get('/:id', auth, async (req, res) => {
     try {
-        const order = await Order.findOne({ 
-            _id: req.params.id, 
-            user: req.user._id 
+        const order = await Order.findOne({
+            _id: req.params.id,
+            user: req.user._id
         }).populate('items.product');
-        
+
         if (!order) {
             return res.status(404).json({ msg: 'Pedido não encontrado' });
         }
@@ -78,7 +78,7 @@ router.put('/:id/status', auth, async (req, res) => {
         if (!req.user.isAdmin) {
             return res.status(403).json({ msg: 'Acesso negado' });
         }
-        
+
         const { status } = req.body;
         const order = await Order.findByIdAndUpdate(
             req.params.id,
@@ -102,12 +102,12 @@ router.get('/admin/all', auth, async (req, res) => {
         if (!req.user.isAdmin) {
             return res.status(403).json({ msg: 'Acesso negado' });
         }
-        
+
         const orders = await Order.find()
             .populate('user', 'name email')
             .populate('items.product')
             .sort({ createdAt: -1 });
-        
+
         res.json(orders);
     } catch (err) {
         res.status(500).json({ msg: 'Erro ao buscar pedidos', error: err.message });
