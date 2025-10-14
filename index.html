@@ -1,31 +1,98 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vereco - Login</title>
+    <title>Vereco - Início</title>
     <link rel="stylesheet" href="styles.css" />
 </head>
-
 <body>
-    <div class="container">
-        <div class="header">
-            <img src="src/assets/Imagem2.svg" alt="Vereco Logo" class="logo" />
-            <div class="image-container">
-                <img src="src/assets/Imagem1.svg" alt="Shopping Illustration" />
+    <div class="home-container">
+        <nav class="home-nav">
+            <img src="src/assets/Imagem2.svg" alt="Vereco Logo" class="nav-logo" />
+            <div class="nav-buttons">
+                <button class="nav-btn" onclick="showLoginForm()">Entrar</button>
+                <a class="nav-btn register" href="cadastro.html">Cadastrar</a>
+            </div>
+        </nav>
+
+        <div class="hero-section">
+            <div class="hero-content">
+                <h1>Produtos Orgânicos<br>Direto do Produtor</h1>
+                <p>Alimentos frescos, saudáveis e sustentáveis para sua mesa.</p>
+            </div>
+            <div class="hero-image">
+                <img src="src/assets/Imagem1.svg" alt="Ilustração Vereco" />
             </div>
         </div>
-        <div class="login-section">
-            <button class="login-btn" onclick="window.location.href='home.html'">Entrar</button>
-            <button class="register-btn" onclick="alert('Cadastro em breve...')">Registrar</button>
-            <p>Ou entre com</p>
-            <div class="social-login">
-                <button class="google-btn"><img src="src/assets/logo-google-.png" alt="Google Icon" />Google</button>
-                <button class="facebook-btn"><img src="src/assets/face.svg" alt="Facebook Icon" />Facebook</button>
+
+        <div class="features-section">
+            <div class="feature-card">
+                <div class="feature-icon">🌱</div>
+                <h3>100% Orgânico</h3>
+                <p>Produtos certificados e livres de agrotóxicos</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🚚</div>
+                <h3>Entrega Fresca</h3>
+                <p>Do produtor para sua casa com rapidez</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💚</div>
+                <h3>Sustentável</h3>
+                <p>Apoiando pequenos produtores locais</p>
+            </div>
+        </div>
+
+        <!-- Modal de Login -->
+        <div id="loginModal" class="modal">
+            <div class="modal-content">
+                <span class="close-btn" onclick="closeLoginModal()">&times;</span>
+                <div class="modal-header">
+                    <img src="src/assets/Imagem2.svg" alt="Vereco Logo" class="modal-logo" />
+                    <h2>Bem-vindo de volta!</h2>
+                </div>
+                <form id="loginForm" class="login-form">
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" required placeholder="Seu email" />
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Senha</label>
+                        <input type="password" id="password" required placeholder="Sua senha" />
+                    </div>
+                    <button type="submit" class="login-btn">Entrar</button>
+                    <div class="login-divider">ou</div>
+                    <div class="social-login">
+                        <button type="button" class="google-btn">
+                            <img src="src/assets/logo-google-.png" alt="Google" />
+                            Entrar com Google
+                        </button>
+                        <button type="button" class="facebook-btn">
+                            <img src="src/assets/face.svg" alt="Facebook" />
+                            Entrar com Facebook
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
-</body>
 
+    <script>
+        const modal = document.getElementById('loginModal');
+        function showLoginForm() { modal.style.display = 'flex'; }
+        function closeLoginModal() { modal.style.display = 'none'; }
+        window.onclick = function (event) { if (event.target === modal) closeLoginModal(); }
+        document.getElementById('loginForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            if (email && password) {
+                window.location.href = 'produtos.html';
+            } else {
+                alert('Por favor, preencha todos os campos!');
+            }
+        });
+    </script>
+</body>
 </html>
