@@ -70,7 +70,15 @@ function addToCart(productId) {
 function createProductCard(product) {
     return `
         <div class="product-card">
-            <img src="${product.image}" alt="${product.name}" class="product-image" loading="lazy">
+            <img 
+                src="${product.image}" 
+                alt="${product.name} - imagem do produto orgânico" 
+                class="product-image" 
+                loading="lazy" 
+                decoding="async" 
+                referrerpolicy="no-referrer" 
+                onerror="this.onerror=null;this.src='src/assets/product-placeholder.svg';"
+            >
             <div class="product-info">
                 <h3 class="product-title">${product.name}</h3>
                 <p class="product-description">${product.description}</p>
