@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sobre Nós - Vereco</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="site-container">
+    <nav class="home-nav">
+      <div class="nav-left">
+        <img src="src/assets/Imagem2.svg" alt="Vereco Logo" class="nav-logo" />
+        <ul class="nav-menu">
+          <li><a href="index.html" class="nav-link">Início</a></li>
+          <li><a href="produtos.html" class="nav-link">Produtos</a></li>
+          <li><a href="sobre.html" class="nav-link active">Sobre Nós</a></li>
+        </ul>
+      </div>
+      <div class="nav-right">
+        <button class="cart-btn" onclick="window.location.href='carrinho.html'">
+          <img src="src/assets/cart.svg" alt="Carrinho" class="cart-icon" />
+          <span id="cart-count">0</span>
+        </button>
+      </div>
+    </nav>
+
+    <header class="page-header">
+      <h1>Quem Somos</h1>
+      <p>Conectamos produtores locais a consumidores que buscam alimentos mais saudáveis e sustentáveis.</p>
+    </header>
+
+    <main class="about-main">
+      <section class="about-section">
+        <h2>Nossa Finalidade</h2>
+        <p>
+          O site <strong>Vereco</strong> foi criado com o propósito de aproximar pessoas de alimentos frescos e de origem transparente. Acreditamos que comer bem não precisa ser complicado: ao reunir em um só lugar frutas e hortaliças selecionadas, ajudamos você a comprar de forma consciente, enquanto fortalecemos pequenos produtores e práticas agrícolas sustentáveis.
+        </p>
+        <p>
+          Aqui você encontra um catálogo simples, carrinho de compras e um fluxo de finalização pensado para demonstrar uma experiência de compra limpa e objetiva. Em versões futuras, planejamos integrar pagamentos reais, rastreabilidade de origem, avaliações de produtores e personalização baseada em preferências nutricionais.
+        </p>
+        <p>
+          Este projeto também serve como base acadêmica / prototípica, mostrando conceitos como persistência local (localStorage), gerenciamento básico de estado do carrinho e uma autenticação simulada. A evolução natural inclui modularização do código, API real, otimização de desempenho e acessibilidade aprimorada.
+        </p>
+        <p>
+          Obrigado por visitar e fazer parte dessa jornada rumo a uma alimentação mais consciente! 🌱
+        </p>
+      </section>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

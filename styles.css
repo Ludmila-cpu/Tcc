@@ -250,6 +250,53 @@ body {
     width: 100%;
     height: 200px;
     object-fit: cover;
+    background: #f0f0f3;
+    display: block;
+    transition: opacity .3s ease;
+}
+
+/* Página Sobre Nós */
+.about-main {
+    flex: 1;
+    padding: 3rem 8% 4rem;
+    background: #f8f9fa;
+}
+
+.about-section {
+    max-width: 920px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 2.5rem 3rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.05);
+    line-height: 1.6;
+}
+
+.about-section h2 {
+    margin-top: 0;
+    font-size: 2rem;
+    color: #2d2d2d;
+    margin-bottom: 1.25rem;
+}
+
+.about-section p {
+    margin-bottom: 1.1rem;
+    color: #555;
+    font-size: 1.02rem;
+}
+
+.about-section p:last-child { margin-bottom: 0; }
+
+/* Estado de carregamento / erro das imagens */
+.product-image[data-loading="true"] {
+    filter: blur(8px);
+    opacity: .6;
+}
+
+.product-image[data-error="true"] {
+    object-fit: contain;
+    padding: 1.5rem;
+    background: #fff url('src/assets/product-placeholder.svg') center/64px 64px no-repeat;
 }
 
 .product-info {
