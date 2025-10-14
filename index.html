@@ -62,17 +62,7 @@
                         <input type="password" id="password" required placeholder="Sua senha" />
                     </div>
                     <button type="submit" class="login-btn">Entrar</button>
-                    <div class="login-divider">ou</div>
-                    <div class="social-login">
-                        <button type="button" class="google-btn">
-                            <img src="src/assets/logo-google-.png" alt="Google" />
-                            Entrar com Google
-                        </button>
-                        <button type="button" class="facebook-btn">
-                            <img src="src/assets/face.svg" alt="Facebook" />
-                            Entrar com Facebook
-                        </button>
-                    </div>
+                    <!-- Botões sociais removidos -->
                 </form>
             </div>
         </div>
@@ -80,8 +70,6 @@
 
     <script>
         const modal = document.getElementById('loginModal');
-        const googleBtn = document.querySelector('.google-btn');
-        const fbBtn = document.querySelector('.facebook-btn');
         const navButtons = document.querySelector('.nav-buttons');
 
         function showLoginForm() { modal.style.display = 'flex'; }
@@ -134,21 +122,6 @@
         });
 
         // Simulações de login social
-        if (googleBtn) {
-            googleBtn.addEventListener('click', () => {
-                // Aqui futuramente integrar SDK Google
-                setCurrentUser({ provider: 'google', email: 'usuario@gmail.com', name: 'Usuário Google' });
-                window.location.href = 'produtos.html';
-            });
-        }
-        if (fbBtn) {
-            fbBtn.addEventListener('click', () => {
-                // Aqui futuramente integrar Facebook OAuth
-                setCurrentUser({ provider: 'facebook', email: 'usuario@facebook.com', name: 'Usuário Facebook' });
-                window.location.href = 'produtos.html';
-            });
-        }
-
         // Render inicial
         renderUserMenu();
     </script>
