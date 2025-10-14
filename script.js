@@ -1,73 +1,101 @@
-// Lista de produtos (Frutas e Legumes)
-const products = [
-    {
-        id: 1,
-        name: 'Maçã Orgânica',
-        price: 7.90,
-        description: 'Maçãs frescas e crocantes cultivadas sem agrotóxicos (500g)',
-        image: 'https://images.unsplash.com/photo-1567306226416-28f0efdc88ce?auto=format&fit=crop&w=600&q=80'
-    },
-    {
-        id: 2,
-        name: 'Banana Nanica',
-        price: 5.50,
-        description: 'Bananas maduras e doces ideais para lanches (1kg)',
-        image: 'https://images.unsplash.com/photo-1574226516831-e1dff420e43e?auto=format&fit=crop&w=600&q=80'
-    },
-    {
-        id: 3,
-        name: 'Cenoura',
-        price: 4.20,
-        description: 'Cenouras crocantes ricas em betacaroteno (500g)',
-        image: 'https://images.unsplash.com/photo-1582515073490-dc84f5ed9b32?auto=format&fit=crop&w=600&q=80'
-    },
-    {
-        id: 4,
-        name: 'Tomate Italiano',
-        price: 8.40,
-        description: 'Tomates suculentos ideais para molhos e saladas (500g)',
-        image: 'https://images.unsplash.com/photo-1561136594-7f68413bfae3?auto=format&fit=crop&w=600&q=80'
-    },
-    {
-        id: 5,
-        name: 'Alface Crespa',
-        price: 3.90,
-        description: 'Folhas verdes e frescas para uma salada saudável (unidade)',
-        image: 'https://images.unsplash.com/photo-1542834369-f10ebf06d3cb?auto=format&fit=crop&w=600&q=80'
-    }
-];
+// Lista de produtos (agora será carregada da API)
+let products = [];
 
-// Carrinho de compras
-let cart = JSON.parse(localStorage.getItem('cart')) || [];
+// Carrinho de compras (sincronizado com backend se autenticado)
+let cart = [];
 
 // Atualiza o contador do carrinho
-function updateCartCount() {
-    const count = cart.reduce((total, item) => total + item.quantity, 0);
-    document.getElementById('cart-count').textContent = count;
+async function updateCartCount() {
+    try {
+        if (window.API && window.API.Auth.isAuthenticated()) {
+            const cartData = await window.API.Cart.get();
+            const count = cartData.items.reduce((total, item) => total + item.quantity, 0);
+            const cartCountEl = document.getElementById('cart-count');
+            if (cartCountEl) cartCountEl.textContent = count;
+        } else {
+            // Fallback para localStorage se não autenticado
+            const localCart = JSON.parse(localStorage.getItem('cart')) || [];
+            const count = localCart.reduce((total, item) => total + (item.quantity || 0), 0);
+            const cartCountEl = document.getElementById('cart-count');
+            if (cartCountEl) cartCountEl.textContent = count;
+        }
+    } catch (error) {
+        console.error('Erro ao atualizar contador:', error);
+        // Fallback para localStorage em caso de erro
+        const localCart = JSON.parse(localStorage.getItem('cart')) || [];
+        const count = localCart.reduce((total, item) => total + (item.quantity || 0), 0);
+        const cartCountEl = document.getElementById('cart-count');
+        if (cartCountEl) cartCountEl.textContent = count;
+    }
 }
 
 // Adiciona produto ao carrinho
-function addToCart(productId) {
-    const product = products.find(p => p.id === productId);
-    const existingItem = cart.find(item => item.id === productId);
+async function addToCart(productId) {
+    try {
+        if (window.API && window.API.Auth.isAuthenticated()) {
+            // Usar API se autenticado
+            await window.API.Cart.addItem(productId, 1);
+            await updateCartCount();
+            showNotification('Produto adicionado ao carrinho!');
+        } else {
+            // Fallback para localStorage
+            const product = products.find(p => p._id === productId || p.id === productId);
+            if (!product) {
+                console.error('Produto não encontrado');
+                return;
+            }
 
-    if (existingItem) {
-        existingItem.quantity++;
-    } else {
-        cart.push({
-            id: product.id,
-            name: product.name,
-            price: product.price,
-            quantity: 1
-        });
+            let localCart = JSON.parse(localStorage.getItem('cart')) || [];
+            const existingItem = localCart.find(item => item.id === productId);
+
+            if (existingItem) {
+                existingItem.quantity++;
+            } else {
+                localCart.push({
+                    id: productId,
+                    name: product.name,
+                    price: product.price,
+                    quantity: 1
+                });
+            }
+
+            localStorage.setItem('cart', JSON.stringify(localCart));
+            await updateCartCount();
+            showNotification('Produto adicionado ao carrinho!');
+        }
+    } catch (error) {
+        console.error('Erro ao adicionar ao carrinho:', error);
+        showNotification('Erro ao adicionar produto. Tente novamente.', 'error');
     }
+}
 
-    localStorage.setItem('cart', JSON.stringify(cart));
-    updateCartCount();
+// Mostrar notificação temporária
+function showNotification(message, type = 'success') {
+    const notification = document.createElement('div');
+    notification.textContent = message;
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 15px 25px;
+        background: ${type === 'success' ? '#39b54a' : '#e74c3c'};
+        color: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        z-index: 10000;
+        font-weight: 500;
+        animation: slideIn 0.3s ease;
+    `;
+    document.body.appendChild(notification);
+    setTimeout(() => {
+        notification.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => notification.remove(), 300);
+    }, 3000);
 }
 
 // Cria cards de produtos
 function createProductCard(product) {
+    const productId = product._id || product.id;
     return `
         <div class="product-card">
             <img 
@@ -77,13 +105,15 @@ function createProductCard(product) {
                 loading="lazy" 
                 decoding="async" 
                 referrerpolicy="no-referrer" 
-                onerror="this.onerror=null;this.src='src/assets/product-placeholder.svg';"
+                data-loading="true"
+                onload="this.removeAttribute('data-loading')"
+                onerror="this.onerror=null;this.setAttribute('data-error','true');this.removeAttribute('data-loading');this.src='src/assets/product-placeholder.svg';"
             >
             <div class="product-info">
                 <h3 class="product-title">${product.name}</h3>
                 <p class="product-description">${product.description}</p>
                 <div class="product-price">R$ ${product.price.toFixed(2)}</div>
-                <button onclick="addToCart(${product.id})" class="add-to-cart-btn">
+                <button onclick="addToCart('${productId}')" class="add-to-cart-btn">
                     Adicionar ao Carrinho
                 </button>
             </div>
@@ -92,10 +122,28 @@ function createProductCard(product) {
 }
 
 // Renderiza produtos na página
-function renderProducts() {
+async function renderProducts() {
     const productList = document.getElementById('product-list');
     if (productList) {
-        productList.innerHTML = products.map(createProductCard).join('');
+        try {
+            // Mostrar loading
+            productList.innerHTML = '<p style="text-align:center; padding:2rem; color:#666;">Carregando produtos...</p>';
+            
+            // Buscar produtos da API
+            if (window.API) {
+                products = await window.API.Products.getAll();
+            }
+            
+            if (products.length === 0) {
+                productList.innerHTML = '<p style="text-align:center; padding:2rem; color:#666;">Nenhum produto disponível no momento.</p>';
+                return;
+            }
+            
+            productList.innerHTML = products.map(createProductCard).join('');
+        } catch (error) {
+            console.error('Erro ao carregar produtos:', error);
+            productList.innerHTML = '<p style="text-align:center; padding:2rem; color:#e74c3c;">Erro ao carregar produtos. Tente novamente mais tarde.</p>';
+        }
     }
 }
 

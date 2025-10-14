@@ -10,6 +10,11 @@
     <div class="home-container">
         <nav class="home-nav">
             <img src="src/assets/Imagem2.svg" alt="Vereco Logo" class="nav-logo" />
+            <ul class="nav-menu" style="list-style:none; display:flex; gap:2rem; margin:0; padding:0;">
+                <li><a href="index.html" class="nav-link active">Início</a></li>
+                <li><a href="produtos.html" class="nav-link">Produtos</a></li>
+                <li><a href="sobre.html" class="nav-link">Sobre Nós</a></li>
+            </ul>
             <div class="nav-buttons">
                 <button class="nav-btn" onclick="showLoginForm()">Entrar</button>
                 <a class="nav-btn register" href="cadastro.html">Cadastrar</a>
@@ -71,6 +76,13 @@
     <script>
         const modal = document.getElementById('loginModal');
         const navButtons = document.querySelector('.nav-buttons');
+        // Marcar ativo conforme página
+        (function highlightActive(){
+            const path = location.pathname.split('/').pop();
+            document.querySelectorAll('.nav-link').forEach(a=>{
+                if(a.getAttribute('href') === path){ a.classList.add('active'); }
+            });
+        })();
 
         function showLoginForm() { modal.style.display = 'flex'; }
         function closeLoginModal() { modal.style.display = 'none'; }
@@ -109,15 +121,27 @@
             }
         }
 
-        document.getElementById('loginForm').addEventListener('submit', function (e) {
+        document.getElementById('loginForm').addEventListener('submit', async function (e) {
             e.preventDefault();
             const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value.trim();
-            if (email && password) {
-                setCurrentUser({ provider: 'email', email, name: email.split('@')[0] });
-                window.location.href = 'produtos.html';
-            } else {
+            
+            if (!email || !password) {
                 alert('Por favor, preencha todos os campos!');
+                return;
+            }
+
+            try {
+                const data = await window.API.Auth.login({ email, password });
+                setCurrentUser({ 
+                    provider: 'email', 
+                    email: data.user.email, 
+                    name: data.user.name,
+                    id: data.user._id
+                });
+                window.location.href = 'produtos.html';
+            } catch (error) {
+                alert('Erro ao fazer login: ' + error.message);
             }
         });
 
@@ -125,5 +149,6 @@
         // Render inicial
         renderUserMenu();
     </script>
+    <script src="./api.js"></script>
 </body>
 </html>
