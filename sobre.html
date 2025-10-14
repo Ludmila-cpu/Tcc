@@ -67,50 +67,10 @@
               <p style="margin:.4rem 0; color:#555;">Focamos em tecnologia acessível, transparência de cadeia e educação nutricional.</p>
             </div>
           </div>
-          <p>Em breve lançaremos funcionalidades como rastreabilidade por lote, comparação de sazonalidade e assinatura de cestas personalizadas.</p>
-          <p>Se quiser saber mais sobre parcerias ou expansão, utilize nosso email oficial ou acompanhe as próximas atualizações.</p>
         </section>
     </main>
   </div>
 
   <script src="script.js"></script>
-    <script>
-      (function(){
-        const form = document.getElementById('contactForm');
-        if(!form) return;
-        const email = document.getElementById('contactEmail');
-        const phone = document.getElementById('contactPhone');
-        const success = document.getElementById('contactSuccess');
-        const emailMsg = document.querySelector('.input-msg[data-for="contactEmail"]');
-        const phoneMsg = document.querySelector('.input-msg[data-for="contactPhone"]');
-
-        function validateEmail(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v); }
-        function onlyDigits(v){ return v.replace(/\D/g,''); }
-        function formatPhone(v){
-          const d = onlyDigits(v).slice(0,11);
-          if(d.length <= 10){
-            return d.replace(/(\d{2})(\d{4})(\d{0,4})/, function(_,a,b,c){ return c?`(${a}) ${b}-${c}`:`(${a}) ${b}`; });
-          }
-          return d.replace(/(\d{2})(\d{5})(\d{0,4})/, function(_,a,b,c){ return c?`(${a}) ${b}-${c}`:`(${a}) ${b}`; });
-        }
-
-        phone.addEventListener('input', e=> { e.target.value = formatPhone(e.target.value); });
-
-        form.addEventListener('submit', e => {
-          e.preventDefault();
-          let ok = true;
-          if(!validateEmail(email.value.trim())){ emailMsg.style.display='block'; ok=false; } else emailMsg.style.display='none';
-          const rawDigits = onlyDigits(phone.value);
-          if(!(rawDigits.length === 10 || rawDigits.length === 11)){ phoneMsg.style.display='block'; ok=false; } else phoneMsg.style.display='none';
-          if(!ok) return;
-          const entries = JSON.parse(localStorage.getItem('contacts')||'[]');
-          entries.push({ email: email.value.trim(), phone: phone.value.trim(), ts: Date.now() });
-          localStorage.setItem('contacts', JSON.stringify(entries));
-          success.style.display='block';
-          form.reset();
-          setTimeout(()=>{ success.style.display='none'; }, 5000);
-        });
-      })();
-    </script>
 </body>
 </html>
