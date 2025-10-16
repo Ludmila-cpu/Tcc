@@ -41,63 +41,93 @@
 
 ### Frontend
 
-| Tecnologia | Versão | Descrição |
-|------------|--------|-----------|
-| **React** | 19.1.1 | Biblioteca JavaScript para construção de interfaces |
-| **React Router DOM** | 7.8.2 | Roteamento e navegação SPA |
-| **TypeScript** | 5.9.2 | Superset JavaScript com tipagem estática |
-| **Vite** | 7.1.4 | Build tool e dev server de alta performance |
-| **Tailwind CSS** | 3.3.3 | Framework CSS utilitário |
-| **PostCSS** | 8.4.31 | Ferramenta para transformação CSS |
+| Tecnologia           | Versão | Descrição                                           |
+| -------------------- | ------ | --------------------------------------------------- |
+| **React**            | 19.1.1 | Biblioteca JavaScript para construção de interfaces |
+| **React Router DOM** | 7.8.2  | Roteamento e navegação SPA                          |
+| **TypeScript**       | 5.9.2  | Superset JavaScript com tipagem estática            |
+| **Vite**             | 7.1.4  | Build tool e dev server de alta performance         |
+| **Tailwind CSS**     | 3.3.3  | Framework CSS utilitário                            |
+| **PostCSS**          | 8.4.31 | Ferramenta para transformação CSS                   |
 
 ### Backend
 
-| Tecnologia | Versão | Descrição |
-|------------|--------|-----------|
-| **Node.js** | 18+ | Runtime JavaScript server-side |
-| **Express.js** | 4.18.2 | Framework web minimalista e flexível |
-| **MongoDB** | 7.5.0 | Banco de dados NoSQL orientado a documentos |
-| **Mongoose** | 7.5.0 | ODM (Object Data Modeling) para MongoDB |
+| Tecnologia     | Versão | Descrição                                   |
+| -------------- | ------ | ------------------------------------------- |
+| **Node.js**    | 18+    | Runtime JavaScript server-side              |
+| **Express.js** | 4.18.2 | Framework web minimalista e flexível        |
+| **MongoDB**    | 7.5.0  | Banco de dados NoSQL orientado a documentos |
+| **Mongoose**   | 7.5.0  | ODM (Object Data Modeling) para MongoDB     |
 
 ### Segurança & Autenticação
 
-| Tecnologia | Versão | Descrição |
-|------------|--------|-----------|
-| **bcryptjs** | 2.4.3 | Hashing de senhas com salt |
-| **jsonwebtoken** | 9.0.1 | Geração e validação de JWT tokens |
-| **express-validator** | 7.0.1 | Middleware de validação de entrada |
-| **CORS** | 2.8.5 | Controle de acesso Cross-Origin |
+| Tecnologia            | Versão | Descrição                          |
+| --------------------- | ------ | ---------------------------------- |
+| **bcryptjs**          | 2.4.3  | Hashing de senhas com salt         |
+| **jsonwebtoken**      | 9.0.1  | Geração e validação de JWT tokens  |
+| **express-validator** | 7.0.1  | Middleware de validação de entrada |
+| **CORS**              | 2.8.5  | Controle de acesso Cross-Origin    |
 
 ### Desenvolvimento
 
-| Tecnologia | Versão | Descrição |
-|------------|--------|-----------|
-| **Nodemon** | 3.0.1 | Auto-reload do servidor em desenvolvimento |
-| **dotenv** | 16.3.1 | Gerenciamento de variáveis de ambiente |
-| **Multer** | 1.4.5 | Upload de arquivos multipart/form-data |
+| Tecnologia  | Versão | Descrição                                  |
+| ----------- | ------ | ------------------------------------------ |
+| **Nodemon** | 3.0.1  | Auto-reload do servidor em desenvolvimento |
+| **dotenv**  | 16.3.1 | Gerenciamento de variáveis de ambiente     |
+| **Multer**  | 1.4.5  | Upload de arquivos multipart/form-data     |
 
 ---
 
 ## 🏗️ Arquitetura
 
-O projeto segue uma arquitetura **Cliente-Servidor** com separação clara entre frontend e backend:
+O projeto segue uma arquitetura **Monorepo** com separação clara entre frontend, backend e arquivos estáticos legacy:
+
+```
+📁 Tcc/ (Monorepo)
+├── 📁 frontend/          # Aplicação React + TypeScript
+│   ├── src/
+│   │   ├── pages/       # Páginas da aplicação
+│   │   ├── assets/      # Recursos estáticos
+│   │   ├── App.tsx
+│   │   └── main.tsx
+│   ├── public/
+│   ├── package.json
+│   └── vite.config.ts
+│
+├── 📁 backend/           # API REST Node.js + Express
+│   ├── src/
+│   │   ├── routes/      # Endpoints da API
+│   │   ├── models/      # Modelos MongoDB
+│   │   ├── middleware/  # Middlewares customizados
+│   │   └── index.js
+│   └── package.json
+│
+├── 📁 static/            # Arquivos HTML legacy (depreciado)
+│   ├── index.html
+│   ├── login.html
+│   ├── styles.css
+│   └── script.js
+│
+└── 📄 README.md          # Documentação principal
+```
+
+### Fluxo Cliente-Servidor
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                        CLIENTE (Frontend)                    │
+│                   FRONTEND (React + Vite)                    │
 │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐      │
 │  │  React Pages │  │  Components  │  │   API Client │      │
-│  │              │  │              │  │   (api.js)   │      │
 │  └──────────────┘  └──────────────┘  └──────┬───────┘      │
 └─────────────────────────────────────────────┼──────────────┘
                                               │ HTTP/REST
-                                              │ JSON
+                                              │ JSON + JWT
 ┌─────────────────────────────────────────────┼──────────────┐
-│                     SERVIDOR (Backend)      │               │
+│                 BACKEND (Express + MongoDB)  │               │
 │  ┌──────────────────────────────────────────▼──────┐       │
 │  │            Express.js REST API                  │       │
 │  │  ┌──────────┐  ┌──────────┐  ┌──────────┐      │       │
-│  │  │  Routes  │→ │Controllers│→ │Middleware│      │       │
+│  │  │  Routes  │→ │Middleware│→ │  Models  │      │       │
 │  │  └──────────┘  └──────────┘  └──────────┘      │       │
 │  └──────────────────────┬──────────────────────────┘       │
 │                         │ Mongoose ODM                      │
@@ -237,6 +267,7 @@ Tcc/
 ### Implementações de Segurança
 
 #### 1. **Autenticação JWT**
+
 ```javascript
 // Token com payload mínimo
 {
@@ -245,32 +276,37 @@ Tcc/
   "exp": 1729699200
 }
 ```
+
 - Tokens assinados com secret forte
 - Expiração em 7 dias
 - Validação em todas as rotas protegidas
 
 #### 2. **Hash de Senhas**
+
 ```javascript
 // Bcrypt com 8 salt rounds
-userSchema.pre('save', async function(next) {
-    if (this.isModified('password')) {
-        this.password = await bcrypt.hash(this.password, 8);
-    }
+userSchema.pre("save", async function (next) {
+  if (this.isModified("password")) {
+    this.password = await bcrypt.hash(this.password, 8);
+  }
 });
 ```
 
 #### 3. **Validação de Entrada**
+
 - Express Validator para sanitização
 - Validação de tipos de dados
 - Proteção contra injeção NoSQL
 - Validação de formato de email
 
 #### 4. **CORS Configurado**
+
 ```javascript
 app.use(cors()); // Permite requisições do frontend
 ```
 
 #### 5. **Variáveis de Ambiente**
+
 ```bash
 # Dados sensíveis nunca commitados
 MONGODB_URI=mongodb://...
@@ -279,10 +315,11 @@ PORT=5000
 ```
 
 #### 6. **Middleware de Autenticação**
+
 ```javascript
 // Proteção de rotas sensíveis
-router.get('/me', authMiddleware, getUserProfile);
-router.post('/cart/add', authMiddleware, addToCart);
+router.get("/me", authMiddleware, getUserProfile);
+router.post("/cart/add", authMiddleware, addToCart);
 ```
 
 ### Pontos de Melhoria (Roadmap)
@@ -302,23 +339,26 @@ router.post('/cart/add', authMiddleware, addToCart);
 ### Boas Práticas Implementadas
 
 #### 1. **Estrutura Modular**
+
 - Separação clara de responsabilidades (MVC)
 - Módulos reutilizáveis e testáveis
 - Baixo acoplamento entre componentes
 
 #### 2. **Tratamento de Erros**
+
 ```javascript
 // Try-catch em todas as operações assíncronas
 try {
-    const user = await User.findById(userId);
-    if (!user) throw new Error('Usuário não encontrado');
-    // ...
+  const user = await User.findById(userId);
+  if (!user) throw new Error("Usuário não encontrado");
+  // ...
 } catch (error) {
-    res.status(500).json({ msg: error.message });
+  res.status(500).json({ msg: error.message });
 }
 ```
 
 #### 3. **Validação de Dados**
+
 ```javascript
 // Validação antes de processamento
 const { error, value } = schema.validate(req.body);
@@ -326,24 +366,26 @@ if (error) return res.status(400).json({ msg: error.details[0].message });
 ```
 
 #### 4. **Async/Await**
+
 - Uso consistente de async/await
 - Evita callback hell
 - Código mais legível e manutenível
 
 #### 5. **Nomenclatura Semântica**
+
 - Variáveis descritivas (camelCase)
 - Funções com verbos de ação
 - Constantes em UPPER_CASE
 
 ### Métricas de Código
 
-| Métrica | Valor | Status |
-|---------|-------|--------|
-| **Linhas de Código Backend** | ~800 | ✅ |
-| **Linhas de Código Frontend** | ~600 | ✅ |
-| **Dependências Vulneráveis** | 2 moderate | ⚠️ |
-| **Cobertura de Testes** | 0% | ❌ |
-| **Documentação** | 85% | ✅ |
+| Métrica                       | Valor      | Status |
+| ----------------------------- | ---------- | ------ |
+| **Linhas de Código Backend**  | ~800       | ✅     |
+| **Linhas de Código Frontend** | ~600       | ✅     |
+| **Dependências Vulneráveis**  | 2 moderate | ⚠️     |
+| **Cobertura de Testes**       | 0%         | ❌     |
+| **Documentação**              | 85%        | ✅     |
 
 ### Roadmap de Qualidade
 
@@ -448,35 +490,35 @@ npm start
 
 ### Estatísticas de Desenvolvimento
 
-| Item | Quantidade |
-|------|------------|
-| **Páginas Frontend** | 7 (HTML) + 4 (React TSX) |
-| **Componentes React** | 4+ |
-| **Rotas API** | 15+ endpoints |
-| **Modelos de Dados** | 4 (User, Product, Cart, Order) |
-| **Middlewares** | 1 (Auth) |
-| **Scripts Utilitários** | 1 (seed.js) |
-| **Dependências Frontend** | 11 |
-| **Dependências Backend** | 8 |
-| **Dependências Dev** | 4 |
+| Item                      | Quantidade                     |
+| ------------------------- | ------------------------------ |
+| **Páginas Frontend**      | 7 (HTML) + 4 (React TSX)       |
+| **Componentes React**     | 4+                             |
+| **Rotas API**             | 15+ endpoints                  |
+| **Modelos de Dados**      | 4 (User, Product, Cart, Order) |
+| **Middlewares**           | 1 (Auth)                       |
+| **Scripts Utilitários**   | 1 (seed.js)                    |
+| **Dependências Frontend** | 11                             |
+| **Dependências Backend**  | 8                              |
+| **Dependências Dev**      | 4                              |
 
 ### Performance
 
-| Métrica | Valor Alvo | Status |
-|---------|-----------|--------|
-| **API Response Time** | < 200ms | 🎯 |
-| **Frontend Load Time** | < 2s | 🎯 |
-| **Database Query Time** | < 50ms | 🎯 |
-| **Build Size (Frontend)** | < 500KB | 🎯 |
+| Métrica                   | Valor Alvo | Status |
+| ------------------------- | ---------- | ------ |
+| **API Response Time**     | < 200ms    | 🎯     |
+| **Frontend Load Time**    | < 2s       | 🎯     |
+| **Database Query Time**   | < 50ms     | 🎯     |
+| **Build Size (Frontend)** | < 500KB    | 🎯     |
 
 ### Banco de Dados
 
-| Collection | Documentos | Índices |
-|------------|-----------|---------|
-| **users** | Variável | email (unique) |
-| **products** | 5+ | nome, categoria |
-| **carts** | Variável | userId |
-| **orders** | Variável | userId, status |
+| Collection   | Documentos | Índices         |
+| ------------ | ---------- | --------------- |
+| **users**    | Variável   | email (unique)  |
+| **products** | 5+         | nome, categoria |
+| **carts**    | Variável   | userId          |
+| **orders**   | Variável   | userId, status  |
 
 ---
 
@@ -544,6 +586,7 @@ Frontend atualiza UI
 ## 🌐 API Endpoints
 
 ### Base URL
+
 ```
 http://localhost:5000/api
 ```
@@ -551,9 +594,11 @@ http://localhost:5000/api
 ### 🔐 Autenticação
 
 #### POST `/auth/register`
+
 Registra um novo usuário.
 
 **Request Body:**
+
 ```json
 {
   "nome": "João Silva",
@@ -572,6 +617,7 @@ Registra um novo usuário.
 ```
 
 **Response (201):**
+
 ```json
 {
   "msg": "Usuário cadastrado com sucesso!",
@@ -587,9 +633,11 @@ Registra um novo usuário.
 ---
 
 #### POST `/auth/login`
+
 Autentica um usuário existente.
 
 **Request Body:**
+
 ```json
 {
   "email": "joao@example.com",
@@ -598,6 +646,7 @@ Autentica um usuário existente.
 ```
 
 **Response (200):**
+
 ```json
 {
   "msg": "Login realizado com sucesso!",
@@ -613,14 +662,17 @@ Autentica um usuário existente.
 ---
 
 #### GET `/auth/me`
+
 Retorna dados do usuário autenticado. **Requer autenticação.**
 
 **Headers:**
+
 ```
 Authorization: Bearer <token>
 ```
 
 **Response (200):**
+
 ```json
 {
   "_id": "507f1f77bcf86cd799439011",
@@ -636,9 +688,11 @@ Authorization: Bearer <token>
 ### 🛍️ Produtos
 
 #### GET `/products`
+
 Lista todos os produtos disponíveis.
 
 **Response (200):**
+
 ```json
 [
   {
@@ -657,15 +711,17 @@ Lista todos os produtos disponíveis.
 ---
 
 #### GET `/products/:id`
+
 Retorna detalhes de um produto específico.
 
 **Response (200):**
+
 ```json
 {
   "_id": "507f191e810c19729de860ea",
   "nome": "Maçã Orgânica",
   "descricao": "Maçã orgânica fresca e saborosa...",
-  "preco": 8.90,
+  "preco": 8.9,
   "categoria": "Frutas",
   "imagem": "https://exemplo.com/maca.jpg",
   "estoque": 100
@@ -679,14 +735,17 @@ Retorna detalhes de um produto específico.
 Todas as rotas de carrinho **requerem autenticação**.
 
 #### POST `/cart/add`
+
 Adiciona um produto ao carrinho.
 
 **Headers:**
+
 ```
 Authorization: Bearer <token>
 ```
 
 **Request Body:**
+
 ```json
 {
   "productId": "507f191e810c19729de860ea",
@@ -695,6 +754,7 @@ Authorization: Bearer <token>
 ```
 
 **Response (200):**
+
 ```json
 {
   "msg": "Produto adicionado ao carrinho",
@@ -705,10 +765,10 @@ Authorization: Bearer <token>
       {
         "productId": "507f191e810c19729de860ea",
         "quantity": 2,
-        "price": 8.90
+        "price": 8.9
       }
     ],
-    "totalPrice": 17.80
+    "totalPrice": 17.8
   }
 }
 ```
@@ -716,9 +776,11 @@ Authorization: Bearer <token>
 ---
 
 #### GET `/cart`
+
 Retorna o carrinho do usuário autenticado.
 
 **Response (200):**
+
 ```json
 {
   "_id": "507f...",
@@ -731,9 +793,11 @@ Retorna o carrinho do usuário autenticado.
 ---
 
 #### PUT `/cart/update`
+
 Atualiza a quantidade de um item no carrinho.
 
 **Request Body:**
+
 ```json
 {
   "productId": "507f191e810c19729de860ea",
@@ -744,9 +808,11 @@ Atualiza a quantidade de um item no carrinho.
 ---
 
 #### DELETE `/cart/remove/:productId`
+
 Remove um produto do carrinho.
 
 **Response (200):**
+
 ```json
 {
   "msg": "Produto removido do carrinho",
@@ -761,9 +827,11 @@ Remove um produto do carrinho.
 Todas as rotas de pedidos **requerem autenticação**.
 
 #### POST `/orders/create`
+
 Cria um novo pedido a partir do carrinho.
 
 **Request Body:**
+
 ```json
 {
   "enderecoEntrega": {
@@ -779,6 +847,7 @@ Cria um novo pedido a partir do carrinho.
 ```
 
 **Response (201):**
+
 ```json
 {
   "msg": "Pedido criado com sucesso!",
@@ -796,9 +865,11 @@ Cria um novo pedido a partir do carrinho.
 ---
 
 #### GET `/orders`
+
 Lista todos os pedidos do usuário autenticado.
 
 **Response (200):**
+
 ```json
 [
   {
@@ -815,9 +886,11 @@ Lista todos os pedidos do usuário autenticado.
 ---
 
 #### GET `/orders/:id`
+
 Retorna detalhes de um pedido específico.
 
 **Response (200):**
+
 ```json
 {
   "_id": "507f...",
@@ -914,6 +987,7 @@ Este projeto foi desenvolvido para fins acadêmicos (TCC).
 ## 🆘 Troubleshooting
 
 ### Erro: "Cannot connect to MongoDB"
+
 ```bash
 # Verifique se o MongoDB está rodando:
 mongod --version
@@ -922,6 +996,7 @@ mongod --version
 ```
 
 ### Erro: "ERR_CONNECTION_REFUSED"
+
 ```bash
 # Certifique-se de que o backend está rodando:
 cd server
@@ -929,6 +1004,7 @@ npm run dev
 ```
 
 ### Erro: "Invalid token"
+
 ```bash
 # Limpe o localStorage e faça login novamente
 localStorage.clear()
