@@ -1,229 +1,194 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { productsAPI, Product } from '../services/api';
-import { formatPrice } from '../utils/formatters';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
-import Loading from '../components/Loading';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
+import Imagem1 from "../assets/Imagem1.svg";
+import Imagem2 from "../assets/Imagem2.svg";
+import Footer from "../components/Footer";
 
 const HomePage: React.FC = () => {
   const navigate = useNavigate();
-  const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { isAuthenticated, user } = useAuth();
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+    name: ""
+  });
 
-  useEffect(() => {
-    loadFeaturedProducts();
-  }, []);
-
-  const loadFeaturedProducts = async () => {
-    try {
-      const response = await productsAPI.getAll({ page: 1, limit: 6 });
-      setFeaturedProducts(response.products);
-    } catch (err) {
-      console.error('Erro ao carregar produtos em destaque:', err);
-    } finally {
-      setLoading(false);
-    }
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
   };
 
-  const categories = [
-    { name: 'Frutas', icon: '🍎', description: 'Frutas frescas e saudáveis' },
-    { name: 'Verduras', icon: '🥬', description: 'Verduras e folhas verdes' },
-    { name: 'Legumes', icon: '🥕', description: 'Legumes frescos' },
-    { name: 'Orgânicos', icon: '🌿', description: 'Produtos 100% orgânicos' },
-  ];
-
-  if (loading) {
-    return <Loading />;
-  }
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Redirecionar para a página de login/produtos
+    navigate(isAuthenticated ? "/produtos" : "/login");
+  };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
-      <Header />
-      
+    <div className="min-h-screen bg-white">
+      {/* Navegação */}
+      <nav className="flex justify-between items-center px-[5%] py-5 bg-white shadow-sm sticky top-0 z-50">
+        <img src={Imagem2} alt="Vereco Logo" className="h-10" />
+        
+        <ul className="flex gap-8 list-none m-0 p-0">
+          <li>
+            <a 
+              href="/" 
+              className="text-[#333] no-underline font-medium px-0 py-2 relative hover:text-[#39b54a] border-b-2 border-[#39b54a]"
+            >
+              Início
+            </a>
+          </li>
+          <li>
+            <a 
+              href="/produtos" 
+              onClick={(e) => { e.preventDefault(); navigate("/produtos"); }}
+              className="text-[#333] no-underline font-medium px-0 py-2 relative hover:text-[#39b54a]"
+            >
+              Produtos
+            </a>
+          </li>
+          <li>
+            <a 
+              href="/sobre" 
+              className="text-[#333] no-underline font-medium px-0 py-2 relative hover:text-[#39b54a]"
+            >
+              Sobre Nós
+            </a>
+          </li>
+        </ul>
+
+        <div className="flex gap-4">
+          {isAuthenticated && user ? (
+            <div className="flex items-center gap-4">
+              <span className="text-[#333]">Olá, {user.name}</span>
+              <button
+                onClick={() => navigate("/perfil")}
+                className="px-5 py-2.5 rounded-lg border-2 border-[#39b54a] bg-transparent text-[#39b54a] text-base cursor-pointer transition-all duration-300 hover:bg-[#39b54a] hover:text-white"
+              >
+                Perfil
+              </button>
+            </div>
+          ) : (
+            <>
+              <button
+                onClick={() => navigate("/login")}
+                className="px-5 py-2.5 rounded-lg border-2 border-[#39b54a] bg-transparent text-[#39b54a] text-base cursor-pointer transition-all duration-300 hover:bg-[#39b54a] hover:text-white"
+              >
+                Entrar
+              </button>
+              <button
+                onClick={() => navigate("/login")}
+                className="px-5 py-2.5 rounded-lg border-2 border-[#39b54a] bg-[#39b54a] text-white text-base cursor-pointer transition-all duration-300 hover:bg-[#2e9c3f] hover:border-[#2e9c3f]"
+              >
+                Cadastrar
+              </button>
+            </>
+          )}
+        </div>
+      </nav>
+
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-green-600 to-green-500 text-white py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h1 className="text-5xl font-bold mb-6">
-              Bem-vindo ao Mercado Verde! 🌱
-            </h1>
-            <p className="text-xl mb-8 text-green-50">
-              Produtos frescos e saudáveis direto para sua casa
-            </p>
-            <button
-              onClick={() => navigate('/produtos')}
-              className="bg-white text-green-600 px-8 py-3 rounded-lg font-semibold text-lg hover:bg-green-50 transition-colors duration-200 shadow-lg"
-            >
-              Ver Produtos
-            </button>
-          </div>
-        </div>
-      </section>
-
-      {/* Categories Section */}
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">
-            Nossas Categorias
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {categories.map((category, index) => (
-              <div
-                key={index}
-                className="bg-gray-50 rounded-xl p-6 text-center hover:shadow-lg transition-shadow duration-200 cursor-pointer"
-                onClick={() => navigate('/produtos')}
-              >
-                <div className="text-5xl mb-4">{category.icon}</div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                  {category.name}
-                </h3>
-                <p className="text-gray-600">{category.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Featured Products Section */}
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900">
-              Produtos em Destaque
-            </h2>
-            <button
-              onClick={() => navigate('/produtos')}
-              className="text-green-600 font-semibold hover:text-green-700"
-            >
-              Ver todos →
-            </button>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {featuredProducts.map((product) => (
-              <div
-                key={product._id}
-                className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden cursor-pointer"
-                onClick={() => navigate('/produtos')}
-              >
-                <div className="aspect-square bg-gray-100 flex items-center justify-center p-8">
-                  {product.image ? (
-                    <img
-                      src={product.image}
-                      alt={product.name}
-                      className="w-full h-full object-contain"
-                    />
-                  ) : (
-                    <div className="text-6xl">🥗</div>
-                  )}
-                </div>
-                <div className="p-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                    {product.name}
-                  </h3>
-                  <p className="text-gray-600 text-sm mb-4 line-clamp-2">
-                    {product.description}
-                  </p>
-                  <div className="flex items-center justify-between">
-                    <span className="text-2xl font-bold text-green-600">
-                      {formatPrice(product.price)}
-                    </span>
-                    <span className="text-sm text-gray-500">
-                      {product.unit}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* About Section */}
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <h2 className="text-3xl font-bold text-gray-900 mb-6">
-                Por que escolher o Mercado Verde?
-              </h2>
-              <div className="space-y-4">
-                <div className="flex items-start space-x-4">
-                  <div className="text-3xl">✅</div>
-                  <div>
-                    <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                      Produtos Frescos
-                    </h3>
-                    <p className="text-gray-600">
-                      Selecionamos os melhores produtos diretamente dos produtores locais
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-4">
-                  <div className="text-3xl">🚚</div>
-                  <div>
-                    <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                      Entrega Rápida
-                    </h3>
-                    <p className="text-gray-600">
-                      Receba seus produtos no conforto da sua casa em até 24 horas
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-4">
-                  <div className="text-3xl">💚</div>
-                  <div>
-                    <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                      Sustentabilidade
-                    </h3>
-                    <p className="text-gray-600">
-                      Comprometidos com práticas sustentáveis e embalagens eco-friendly
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-4">
-                  <div className="text-3xl">🏆</div>
-                  <div>
-                    <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                      Qualidade Garantida
-                    </h3>
-                    <p className="text-gray-600">
-                      100% de satisfação garantida ou seu dinheiro de volta
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="bg-gradient-to-br from-green-100 to-green-200 rounded-2xl p-12 flex items-center justify-center">
-              <div className="text-center">
-                <div className="text-8xl mb-6">🥬🥕🍎</div>
-                <p className="text-2xl font-semibold text-gray-800">
-                  Alimentação saudável começa aqui!
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-16 bg-gradient-to-r from-green-600 to-green-500 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-4xl font-bold mb-6">
-            Pronto para começar? 🛒
-          </h2>
-          <p className="text-xl mb-8 text-green-50">
-            Faça seu primeiro pedido e ganhe 10% de desconto!
+      <section className="flex justify-between items-center px-[10%] py-[60px] bg-gradient-to-br from-[#f8f9fa] to-[#e9ecef]">
+        <div className="flex-1 pr-[60px]">
+          <h1 className="text-5xl text-[#333] mb-5 leading-tight">
+            Produtos Orgânicos<br />Direto do Produtor
+          </h1>
+          <p className="text-xl text-[#666] mb-8">
+            Alimentos frescos, saudáveis e sustentáveis para sua mesa.
           </p>
-          <button
-            onClick={() => navigate('/produtos')}
-            className="bg-white text-green-600 px-8 py-3 rounded-lg font-semibold text-lg hover:bg-green-50 transition-colors duration-200 shadow-lg"
-          >
-            Começar a Comprar
-          </button>
+        </div>
+        <div className="flex-1 flex justify-center">
+          <img src={Imagem1} alt="Ilustração Vereco" className="max-w-full h-auto" />
         </div>
       </section>
+
+      {/* Features Section */}
+      <section className="grid grid-cols-1 md:grid-cols-3 gap-8 px-[10%] py-[60px] bg-white">
+        <div className="text-center p-8 rounded-xl bg-[#f8f9fa] transition-transform duration-300 hover:-translate-y-1">
+          <div className="text-5xl mb-5">🌱</div>
+          <h3 className="text-[#333] mb-4 text-xl font-semibold">100% Orgânico</h3>
+          <p className="text-[#666]">Produtos certificados e livres de agrotóxicos</p>
+        </div>
+        <div className="text-center p-8 rounded-xl bg-[#f8f9fa] transition-transform duration-300 hover:-translate-y-1">
+          <div className="text-5xl mb-5">🚚</div>
+          <h3 className="text-[#333] mb-4 text-xl font-semibold">Entrega Fresca</h3>
+          <p className="text-[#666]">Do produtor para sua casa com rapidez</p>
+        </div>
+        <div className="text-center p-8 rounded-xl bg-[#f8f9fa] transition-transform duration-300 hover:-translate-y-1">
+          <div className="text-5xl mb-5">💚</div>
+          <h3 className="text-[#333] mb-4 text-xl font-semibold">Sustentável</h3>
+          <p className="text-[#666]">Apoiando pequenos produtores locais</p>
+        </div>
+      </section>
+
+      {/* Modal de Login */}
+      {showLoginModal && (
+        <div 
+          className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center z-[1000]"
+          onClick={() => setShowLoginModal(false)}
+        >
+          <div 
+            className="bg-white rounded-2xl p-10 max-w-md w-full relative shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              className="absolute top-5 right-5 text-3xl text-[#999] cursor-pointer hover:text-[#333]"
+              onClick={() => setShowLoginModal(false)}
+            >
+              ×
+            </button>
+            
+            <div className="text-center mb-8">
+              <img src={Imagem2} alt="Vereco Logo" className="h-12 mx-auto mb-4" />
+              <h2 className="text-2xl text-[#333] mb-2">Bem-vindo de volta!</h2>
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <div>
+                <label className="block text-[#333] mb-2 font-medium" htmlFor="email">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  required
+                  placeholder="Seu email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  className="w-full px-4 py-3 border border-[#ddd] rounded-lg text-base transition-all duration-300 focus:border-[#39b54a] focus:outline-none"
+                />
+              </div>
+              <div>
+                <label className="block text-[#333] mb-2 font-medium" htmlFor="password">
+                  Senha
+                </label>
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  required
+                  placeholder="Sua senha"
+                  value={formData.password}
+                  onChange={handleInputChange}
+                  className="w-full px-4 py-3 border border-[#ddd] rounded-lg text-base transition-all duration-300 focus:border-[#39b54a] focus:outline-none"
+                />
+              </div>
+              <button
+                type="submit"
+                className="w-full bg-[#39b54a] text-white py-3 rounded-lg text-base font-semibold cursor-pointer transition-all duration-300 hover:bg-[#2e9c3f]"
+              >
+                Entrar
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
 
       <Footer />
     </div>
