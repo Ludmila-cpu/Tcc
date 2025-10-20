@@ -81,4 +81,60 @@ router.post('/login', [
     }
 });
 
+// Obter perfil do usuário autenticado
+router.get('/me', require('../middleware/auth'), async (req, res) => {
+    try {
+        const user = await User.findById(req.user._id).select('-password');
+        res.json({
+            success: true,
+            user
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ msg: 'Erro ao buscar perfil' });
+    }
+});
+
+// Atualizar perfil do usuário
+router.put('/profile', require('../middleware/auth'), [
+    check('name', 'Nome é obrigatório').optional().not().isEmpty(),
+    check('email', 'Email inválido').optional().isEmail()
+], async (req, res) => {
+    try {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+
+        const { name, email, address } = req.body;
+        const updateFields = {};
+
+        if (name) updateFields.name = name;
+        if (email) updateFields.email = email;
+        if (address) updateFields.address = address;
+
+        // Verificar se email já está em uso por outro usuário
+        if (email && email !== req.user.email) {
+            const emailExists = await User.findOne({ email });
+            if (emailExists) {
+                return res.status(400).json({ msg: 'Email já está em uso' });
+            }
+        }
+
+        const user = await User.findByIdAndUpdate(
+            req.user._id,
+            updateFields,
+            { new: true, runValidators: true }
+        ).select('-password');
+
+        res.json({
+            success: true,
+            user
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ msg: 'Erro ao atualizar perfil' });
+    }
+});
+
 module.exports = router;

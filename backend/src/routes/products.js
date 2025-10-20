@@ -4,12 +4,63 @@ const Product = require('../models/Product');
 
 const router = express.Router();
 
-// Listar todos os produtos
+// Listar todos os produtos com filtros e paginação
 router.get('/', async (req, res) => {
     try {
-        const products = await Product.find();
-        res.json(products);
+        const { 
+            category, 
+            search, 
+            minPrice, 
+            maxPrice, 
+            page = 1, 
+            limit = 10,
+            sort = 'createdAt'
+        } = req.query;
+
+        // Construir filtros
+        const filters = {};
+        
+        if (category) {
+            filters.category = category;
+        }
+
+        if (search) {
+            filters.$or = [
+                { name: { $regex: search, $options: 'i' } },
+                { description: { $regex: search, $options: 'i' } }
+            ];
+        }
+
+        if (minPrice || maxPrice) {
+            filters.price = {};
+            if (minPrice) filters.price.$gte = Number(minPrice);
+            if (maxPrice) filters.price.$lte = Number(maxPrice);
+        }
+
+        // Paginação
+        const skip = (Number(page) - 1) * Number(limit);
+
+        // Buscar produtos
+        const products = await Product.find(filters)
+            .sort(sort)
+            .limit(Number(limit))
+            .skip(skip);
+
+        // Total de produtos
+        const total = await Product.countDocuments(filters);
+
+        res.json({
+            success: true,
+            products,
+            pagination: {
+                currentPage: Number(page),
+                totalPages: Math.ceil(total / Number(limit)),
+                totalProducts: total,
+                limit: Number(limit)
+            }
+        });
     } catch (err) {
+        console.error(err);
         res.status(500).json({ msg: 'Erro ao buscar produtos' });
     }
 });
