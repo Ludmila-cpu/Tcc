@@ -28,8 +28,9 @@
     </div>
   </div>
 
+  <script src="./api.js"></script>
   <script>
-    // Função de login DIRETA (sem api.js)
+    // Função de login usando o cliente API (base dinâmica)
     document.getElementById('form-login').addEventListener('submit', async function (event) {
       event.preventDefault();
 
@@ -42,29 +43,12 @@
       }
 
       try {
-        console.log('🔄 Tentando login com:', email);
-
-        const response = await fetch('http://localhost:5000/api/auth/login', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ email, password })
-        });
-
-        console.log('📡 Status da resposta:', response.status);
-
-        const data = await response.json();
-        console.log('📦 Dados recebidos:', data);
-
-        if (response.ok && data.token) {
-          // Salva o token
-          localStorage.setItem('authToken', data.token);
-          alert('✅ Login realizado com sucesso!');
-          window.location.href = 'produtos.html';
-        } else {
-          alert('❌ Erro: ' + (data.msg || 'Credenciais inválidas'));
-        }
+        console.log('🔄 Tentando login com:', email, '→ base:', (window.API && window.API.getBase && window.API.getBase()) || 'desconhecida');
+        const data = await window.API.Auth.login({ email, password });
+        if (!data || !data.token) throw new Error('Resposta inválida do servidor');
+        try { localStorage.setItem('token', data.token); } catch { }
+        alert('✅ Login realizado com sucesso!');
+        window.location.href = 'produtos.html';
       } catch (error) {
         console.error('💥 Erro completo:', error);
         alert('❌ Erro ao fazer login: ' + error.message);

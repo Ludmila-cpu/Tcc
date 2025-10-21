@@ -1,5 +1,25 @@
 // Módulo de comunicação com a API Backend
-const API_URL = 'http://localhost:5000/api';
+// Base dinâmica: usa o hostname atual (localhost ou 127.0.0.1) e permite override via localStorage (API_BASE)
+function normalizeBase(base) {
+    if (!base) return null;
+    const trimmed = String(base).trim().replace(/\/$/, '');
+    if (/^https?:\/\//i.test(trimmed)) return trimmed;
+    return `http://${trimmed}`; // backend roda em HTTP na porta 5000
+}
+
+const DEFAULT_HOST = (typeof window !== 'undefined' && window.location && window.location.hostname) ? window.location.hostname : 'localhost';
+let API_BASE = normalizeBase(localStorage.getItem('API_BASE')) || `http://${DEFAULT_HOST}:5000`;
+let API_URL = `${API_BASE}/api`;
+
+function setApiBase(newBase) {
+    const normalized = normalizeBase(newBase) || `http://${DEFAULT_HOST}:5000`;
+    API_BASE = normalized;
+    API_URL = `${API_BASE}/api`;
+    try { localStorage.setItem('API_BASE', API_BASE); } catch { }
+    console.info('[API] Base configurada para:', API_BASE);
+}
+
+function getApiBase() { return API_BASE; }
 
 // Gerenciamento de token JWT
 const TokenManager = {
@@ -35,7 +55,8 @@ async function request(endpoint, options = {}) {
     };
 
     try {
-        const response = await fetch(`${API_URL}${endpoint}`, config);
+        const url = `${API_URL}${endpoint}`;
+        const response = await fetch(url, config);
         const data = await response.json();
 
         if (!response.ok) {
@@ -191,5 +212,7 @@ window.API = {
     Products: ProductsAPI,
     Cart: CartAPI,
     Orders: OrdersAPI,
-    TokenManager
+    TokenManager,
+    getBase: getApiBase,
+    setBase: setApiBase
 };

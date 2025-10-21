@@ -145,7 +145,8 @@ async function renderProducts() {
                 fetched = await window.API.Products.getAll();
             } else {
                 console.warn('[renderProducts] window.API não disponível. Tentando fetch direto...');
-                const res = await fetch('http://localhost:5000/api/products');
+                const base = (window.API && window.API.getBase && window.API.getBase()) || 'http://localhost:5000';
+                const res = await fetch(`${base}/api/products`);
                 fetched = await res.json();
             }
 

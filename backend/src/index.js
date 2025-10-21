@@ -51,7 +51,7 @@ app.use('/api/auth/login', authLimiter);
 app.use('/api/auth/register', authLimiter);
 
 // CORS
-const allowedOrigins = process.env.ALLOWED_ORIGINS 
+const allowedOrigins = process.env.ALLOWED_ORIGINS
     ? process.env.ALLOWED_ORIGINS.split(',')
     : ['http://localhost:5173', 'http://localhost:3000'];
 
@@ -88,7 +88,7 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/vereco', 
 
 // Rota de teste
 app.get('/', (req, res) => {
-    res.json({ 
+    res.json({
         success: true,
         message: 'API Vereco funcionando!',
         version: '1.0.0',
@@ -103,7 +103,7 @@ app.get('/', (req, res) => {
 
 // Health check
 app.get('/health', (req, res) => {
-    res.json({ 
+    res.json({
         success: true,
         status: 'OK',
         timestamp: new Date().toISOString(),

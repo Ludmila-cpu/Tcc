@@ -143,27 +143,14 @@
             }
 
             try {
-                console.log('🔄 Fazendo login com:', email);
-                const response = await fetch('http://localhost:5000/api/auth/login', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, password })
-                });
-
-                // Tenta parsear JSON com segurança
-                let data;
-                try { data = await response.json(); } catch { data = {}; }
-                console.log('📦 Resposta recebida');
-
-                if (!response.ok) {
-                    throw new Error(data.msg || 'Erro ao fazer login');
+                console.log('🔄 Fazendo login com:', email, '→ base:', (window.API && window.API.getBase && window.API.getBase()) || 'desconhecida');
+                const data = await window.API.Auth.login({ email, password });
+                if (!data || !data.token) {
+                    throw new Error('Resposta inválida do servidor');
                 }
-
-                // Salvar token
-                // Padroniza com o TokenManager (usa 'authToken') e mantém compatibilidade com 'token'
-                localStorage.setItem('authToken', data.token);
-                localStorage.setItem('token', data.token);
-                console.log('✅ Token salvo');
+                // Compatibilidade: além do TokenManager, guarda em "token"
+                try { localStorage.setItem('token', data.token); } catch { }
+                console.log('✅ Login realizado');
 
                 // Salvar dados do usuário (temporário)
                 const userName = email.split('@')[0];
