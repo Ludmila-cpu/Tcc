@@ -39,7 +39,7 @@ const limiter = rateLimit({
 // Rate Limiting específico para autenticação (mais restritivo)
 const authLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutos
-    max: 5, // apenas 5 tentativas de login/registro
+    max: process.env.NODE_ENV !== 'production' ? 1000 : 5, // relaxa no dev
     message: 'Muitas tentativas de login/registro. Tente novamente em 15 minutos.',
     standardHeaders: true,
     legacyHeaders: false,
@@ -59,7 +59,12 @@ app.use(cors({
     origin: function (origin, callback) {
         // Permitir requisições sem origin (mobile apps, Postman, etc)
         if (!origin) return callback(null, true);
-        
+
+        // Em desenvolvimento, liberar qualquer origem local para evitar "Failed to fetch"
+        if (process.env.NODE_ENV !== 'production') {
+            return callback(null, true);
+        }
+
         if (allowedOrigins.indexOf(origin) !== -1) {
             callback(null, true);
         } else {

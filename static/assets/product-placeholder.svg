@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 160 160" fill="none">
+  <rect width="160" height="160" rx="16" fill="#F3F4F6"/>
+  <path d="M80 38c-8.5 0-15.4 6.9-15.4 15.4 0 3.6 1.2 6.9 3.3 9.5-12.2 2.1-21.5 12.7-21.5 25.5 0 14.3 11.6 25.9 25.9 25.9h16.4c14.3 0 25.9-11.6 25.9-25.9 0-12.8-9.3-23.4-21.5-25.5 2.1-2.6 3.3-5.9 3.3-9.5C96 44.9 89.1 38 80 38z" stroke="#9CA3AF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="#E5E7EB"/>
+  <path d="M68 104c4 2.7 8.7 4.2 12 4.2 3.3 0 8-1.5 12-4.2" stroke="#D1D5DB" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="80" y="150" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#9CA3AF">imagem indisponível</text>
+</svg>

@@ -106,6 +106,7 @@ function showNotification(message, type = 'success') {
 function createProductCard(product) {
     const productId = product._id || product.id;
     const imageUrl = product.image || 'https://via.placeholder.com/400x400/f0f0f0/666?text=Produto';
+    const priceNumber = Number(product.price || 0);
     return `
         <div class="product-card">
             <img 
@@ -119,7 +120,7 @@ function createProductCard(product) {
                 <h3 class="product-title">${product.name}</h3>
                 <p class="product-description">${product.description}</p>
                 <div class="product-footer">
-                    <div class="product-price">R$ ${product.price.toFixed(2)}</div>
+                    <div class="product-price">R$ ${priceNumber.toFixed(2)}</div>
                     <button onclick="addToCart('${productId}')" class="add-to-cart-btn">
                         Adicionar ao Carrinho
                     </button>
@@ -134,13 +135,30 @@ async function renderProducts() {
     const productList = document.getElementById('product-list');
     if (productList) {
         try {
+            console.log('[renderProducts] Iniciando carregamento...');
             // Mostrar loading
             productList.innerHTML = '<p style="text-align:center; padding:2rem; color:#666;">Carregando produtos...</p>';
 
             // Buscar produtos da API
-            if (window.API) {
-                products = await window.API.Products.getAll();
+            let fetched = [];
+            if (window.API && window.API.Products && typeof window.API.Products.getAll === 'function') {
+                fetched = await window.API.Products.getAll();
+            } else {
+                console.warn('[renderProducts] window.API não disponível. Tentando fetch direto...');
+                const res = await fetch('http://localhost:5000/api/products');
+                fetched = await res.json();
             }
+
+            // Normalizar formato
+            if (Array.isArray(fetched)) {
+                products = fetched;
+            } else if (fetched && Array.isArray(fetched.products)) {
+                products = fetched.products;
+            } else {
+                console.error('[renderProducts] Resposta inesperada dos produtos:', fetched);
+                throw new Error('Formato inesperado da resposta de produtos');
+            }
+            console.log('[renderProducts] Produtos recebidos:', products);
 
             if (products.length === 0) {
                 productList.innerHTML = '<p style="text-align:center; padding:2rem; color:#666;">Nenhum produto disponível no momento.</p>';
@@ -149,7 +167,7 @@ async function renderProducts() {
 
             productList.innerHTML = products.map(createProductCard).join('');
         } catch (error) {
-            console.error('Erro ao carregar produtos:', error);
+            console.error('Erro ao carregar produtos:', error && error.message ? error.message : error, error);
             productList.innerHTML = '<p style="text-align:center; padding:2rem; color:#e74c3c;">Erro ao carregar produtos. Tente novamente mais tarde.</p>';
         }
     }

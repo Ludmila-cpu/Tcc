@@ -90,7 +90,12 @@ const AuthAPI = {
 // API de Produtos
 const ProductsAPI = {
     async getAll() {
-        return request('/products');
+        // Busca e normaliza o formato da resposta para sempre retornar um array de produtos
+        const data = await request('/products');
+        if (Array.isArray(data)) return data;
+        if (data && Array.isArray(data.products)) return data.products;
+        console.warn('[ProductsAPI.getAll] Formato inesperado de resposta:', data);
+        return [];
     },
 
     async getById(id) {

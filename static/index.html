@@ -11,7 +11,7 @@
 <body>
     <div class="home-container">
         <nav class="home-nav">
-            <img src="src/assets/Imagem2.svg" alt="Vereco Logo" class="nav-logo" />
+            <img src="assets/Imagem2.svg" alt="Vereco Logo" class="nav-logo" />
             <ul class="nav-menu" style="list-style:none; display:flex; gap:2rem; margin:0; padding:0;">
                 <li><a href="index.html" class="nav-link active">Início</a></li>
                 <li><a href="produtos.html" class="nav-link">Produtos</a></li>
@@ -30,7 +30,7 @@
                 <p>Alimentos frescos, saudáveis e sustentáveis para sua mesa.</p>
             </div>
             <div class="hero-image">
-                <img src="src/assets/Imagem1.svg" alt="Ilustração Vereco" />
+                <img src="assets/Imagem1.svg" alt="Ilustração Vereco" />
             </div>
         </div>
 
@@ -57,7 +57,7 @@
             <div class="modal-content">
                 <span class="close-btn" onclick="closeLoginModal()">&times;</span>
                 <div class="modal-header">
-                    <img src="src/assets/Imagem2.svg" alt="Vereco Logo" class="modal-logo" />
+                    <img src="assets/Imagem2.svg" alt="Vereco Logo" class="modal-logo" />
                     <h2>Bem-vindo de volta!</h2>
                 </div>
                 <form id="loginForm" class="login-form">
@@ -150,7 +150,9 @@
                     body: JSON.stringify({ email, password })
                 });
 
-                const data = await response.json();
+                // Tenta parsear JSON com segurança
+                let data;
+                try { data = await response.json(); } catch { data = {}; }
                 console.log('📦 Resposta recebida');
 
                 if (!response.ok) {
@@ -158,6 +160,8 @@
                 }
 
                 // Salvar token
+                // Padroniza com o TokenManager (usa 'authToken') e mantém compatibilidade com 'token'
+                localStorage.setItem('authToken', data.token);
                 localStorage.setItem('token', data.token);
                 console.log('✅ Token salvo');
 
@@ -171,6 +175,7 @@
                 });
 
                 console.log('✅ Redirecionando...');
+                try { closeLoginModal(); } catch { }
                 window.location.href = 'produtos.html';
             } catch (error) {
                 console.error('❌ Erro completo:', error);
