@@ -32,34 +32,43 @@ async function updateCartCount() {
 // Adiciona produto ao carrinho
 async function addToCart(productId) {
     try {
+        console.log('🛒 addToCart chamado com ID:', productId);
         if (window.API && window.API.Auth.isAuthenticated()) {
+            console.log('✅ Usuário autenticado, usando API');
             // Usar API se autenticado
             await window.API.Cart.addItem(productId, 1);
             await updateCartCount();
             showNotification('Produto adicionado ao carrinho!');
         } else {
+            console.log('⚠️ Usuário não autenticado, usando localStorage');
             // Fallback para localStorage
             const product = products.find(p => p._id === productId || p.id === productId);
+            console.log('🔍 Produto encontrado:', product);
             if (!product) {
-                console.error('Produto não encontrado');
+                console.error('❌ Produto não encontrado');
                 return;
             }
 
             let localCart = JSON.parse(localStorage.getItem('cart')) || [];
+            console.log('📦 Carrinho atual:', localCart);
             const existingItem = localCart.find(item => item.id === productId);
 
             if (existingItem) {
+                console.log('➕ Incrementando quantidade do item existente');
                 existingItem.quantity++;
             } else {
+                console.log('🆕 Adicionando novo item ao carrinho');
                 localCart.push({
                     id: productId,
                     name: product.name,
                     price: product.price,
+                    image: product.image,
                     quantity: 1
                 });
             }
 
             localStorage.setItem('cart', JSON.stringify(localCart));
+            console.log('💾 Carrinho salvo:', localCart);
             await updateCartCount();
             showNotification('Produto adicionado ao carrinho!');
         }
@@ -96,26 +105,25 @@ function showNotification(message, type = 'success') {
 // Cria cards de produtos
 function createProductCard(product) {
     const productId = product._id || product.id;
+    const imageUrl = product.image || 'https://via.placeholder.com/400x400/f0f0f0/666?text=Produto';
     return `
         <div class="product-card">
             <img 
-                src="${product.image}" 
-                alt="${product.name} - imagem do produto orgânico" 
+                src="${imageUrl}" 
+                alt="${product.name}" 
                 class="product-image" 
-                loading="lazy" 
-                decoding="async" 
-                referrerpolicy="no-referrer" 
-                data-loading="true"
-                onload="this.removeAttribute('data-loading')"
-                onerror="this.onerror=null;this.setAttribute('data-error','true');this.removeAttribute('data-loading');this.src='src/assets/product-placeholder.svg';"
+                loading="lazy"
+                onerror="this.onerror=null;this.src='https://via.placeholder.com/400x400/f0f0f0/666?text=Produto';"
             >
             <div class="product-info">
                 <h3 class="product-title">${product.name}</h3>
                 <p class="product-description">${product.description}</p>
-                <div class="product-price">R$ ${product.price.toFixed(2)}</div>
-                <button onclick="addToCart('${productId}')" class="add-to-cart-btn">
-                    Adicionar ao Carrinho
-                </button>
+                <div class="product-footer">
+                    <div class="product-price">R$ ${product.price.toFixed(2)}</div>
+                    <button onclick="addToCart('${productId}')" class="add-to-cart-btn">
+                        Adicionar ao Carrinho
+                    </button>
+                </div>
             </div>
         </div>
     `;

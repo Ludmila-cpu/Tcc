@@ -15,6 +15,7 @@
             <ul class="nav-menu" style="list-style:none; display:flex; gap:2rem; margin:0; padding:0;">
                 <li><a href="index.html" class="nav-link active">Início</a></li>
                 <li><a href="produtos.html" class="nav-link">Produtos</a></li>
+                <li><a href="historico.html" class="nav-link">Meus Pedidos</a></li>
                 <li><a href="sobre.html" class="nav-link">Sobre Nós</a></li>
             </ul>
             <div class="nav-buttons">
@@ -125,8 +126,16 @@
 
         document.getElementById('loginForm').addEventListener('submit', async function (e) {
             e.preventDefault();
-            const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value.trim();
+            const emailInput = document.getElementById('email');
+            const passwordInput = document.getElementById('password');
+
+            if (!emailInput || !passwordInput) {
+                alert('Erro: Campos não encontrados!');
+                return;
+            }
+
+            const email = emailInput.value.trim();
+            const password = passwordInput.value.trim();
 
             if (!email || !password) {
                 alert('Por favor, preencha todos os campos!');
@@ -134,15 +143,37 @@
             }
 
             try {
-                const data = await window.API.Auth.login({ email, password });
+                console.log('🔄 Fazendo login com:', email);
+                const response = await fetch('http://localhost:5000/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+                console.log('📦 Resposta recebida');
+
+                if (!response.ok) {
+                    throw new Error(data.msg || 'Erro ao fazer login');
+                }
+
+                // Salvar token
+                localStorage.setItem('token', data.token);
+                console.log('✅ Token salvo');
+
+                // Salvar dados do usuário (temporário)
+                const userName = email.split('@')[0];
                 setCurrentUser({
                     provider: 'email',
-                    email: data.user.email,
-                    name: data.user.name,
-                    id: data.user._id
+                    email: email,
+                    name: userName.charAt(0).toUpperCase() + userName.slice(1),
+                    id: 'user_' + Date.now()
                 });
+
+                console.log('✅ Redirecionando...');
                 window.location.href = 'produtos.html';
             } catch (error) {
+                console.error('❌ Erro completo:', error);
                 alert('Erro ao fazer login: ' + error.message);
             }
         });

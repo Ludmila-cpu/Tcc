@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pedido Confirmado - Vereco</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+    <div class="site-container">
+        <nav class="home-nav">
+            <img src="src/assets/Imagem2.svg" alt="Vereco Logo" class="nav-logo" />
+            <ul class="nav-menu" style="list-style:none; display:flex; gap:2rem; margin:0; padding:0;">
+                <li><a href="index.html" class="nav-link">Início</a></li>
+                <li><a href="produtos.html" class="nav-link">Produtos</a></li>
+                <li><a href="historico.html" class="nav-link active">Meus Pedidos</a></li>
+            </ul>
+            <div class="nav-buttons">
+                <button class="cart-btn" onclick="window.location.href='carrinho.html'">
+                    <img src="src/assets/cart.svg" alt="Carrinho" class="cart-icon">
+                    <span id="cart-count">0</span>
+                </button>
+            </div>
+        </nav>
+
+        <main class="confirmation-container">
+            <div class="confirmation-card">
+                <div class="success-icon">✅</div>
+                <h1>Pagamento Confirmado!</h1>
+                <p class="confirmation-message">Seu pedido foi processado com sucesso</p>
+
+                <div class="order-details">
+                    <h2>Detalhes do Pedido</h2>
+                    <div class="order-info-row">
+                        <span class="label">Número do Pedido:</span>
+                        <span class="value" id="order-number">-</span>
+                    </div>
+                    <div class="order-info-row">
+                        <span class="label">Data:</span>
+                        <span class="value" id="order-date">-</span>
+                    </div>
+                    <div class="order-info-row">
+                        <span class="label">Método de Pagamento:</span>
+                        <span class="value" id="payment-method">Cartão de Crédito</span>
+                    </div>
+                    <div class="order-info-row">
+                        <span class="label">Status:</span>
+                        <span class="value status-badge">Aprovado</span>
+                    </div>
+                </div>
+
+                <div class="order-items">
+                    <h3>Itens do Pedido</h3>
+                    <div id="order-items-list"></div>
+                </div>
+
+                <div class="order-total-section">
+                    <div class="total-row">
+                        <span class="total-label">Total:</span>
+                        <span class="total-value" id="order-total">R$ 0,00</span>
+                    </div>
+                </div>
+
+                <div class="confirmation-actions">
+                    <button class="btn-outline" onclick="window.location.href='historico.html'">
+                        Ver Meus Pedidos
+                    </button>
+                    <button class="btn-primary" onclick="window.location.href='produtos.html'">
+                        Continuar Comprando
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Recuperar dados do pedido do localStorage
+        const orderData = JSON.parse(localStorage.getItem('lastOrder') || '{}');
+
+        if (orderData.orderId) {
+            document.getElementById('order-number').textContent = orderData.orderId;
+            document.getElementById('order-date').textContent = new Date(orderData.date).toLocaleString('pt-BR');
+            document.getElementById('order-total').textContent = `R$ ${orderData.total.toFixed(2)}`;
+
+            // Renderizar itens
+            const itemsList = document.getElementById('order-items-list');
+            if (orderData.items && orderData.items.length > 0) {
+                itemsList.innerHTML = orderData.items.map(item => `
+                    <div class="order-item-row">
+                        <span class="item-name">${item.name}</span>
+                        <span class="item-qty">x${item.quantity}</span>
+                        <span class="item-price">R$ ${(item.price * item.quantity).toFixed(2)}</span>
+                    </div>
+                `).join('');
+            }
+
+            // Salvar no histórico
+            let orderHistory = JSON.parse(localStorage.getItem('orderHistory') || '[]');
+            const existingOrder = orderHistory.find(o => o.orderId === orderData.orderId);
+            if (!existingOrder) {
+                orderHistory.unshift(orderData);
+                localStorage.setItem('orderHistory', JSON.stringify(orderHistory));
+            }
+        } else {
+            // Redirecionar se não houver dados
+            window.location.href = 'produtos.html';
+        }
+
+        // Atualizar contador do carrinho
+        document.getElementById('cart-count').textContent = '0';
+    </script>
+</body>
+
+</html>

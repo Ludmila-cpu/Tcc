@@ -70,11 +70,46 @@
     </div>
 
     <script>
+        // Carregar total do carrinho
+        function loadCartTotal() {
+            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            document.querySelector('.total-value').textContent = `R$ ${total.toFixed(2)}`;
+            return { cart, total };
+        }
+
         document.getElementById('payment-form').addEventListener('submit', function (e) {
             e.preventDefault();
+
+            const { cart, total } = loadCartTotal();
+            const cardNumber = document.getElementById('card-number').value;
+            const cardName = document.getElementById('card-name').value;
+
+            // Criar dados do pedido
+            const orderData = {
+                orderId: 'VRC' + Date.now(),
+                date: new Date().toISOString(),
+                items: cart,
+                total: total,
+                status: 'aprovado',
+                paymentMethod: 'cartao',
+                cardLastDigits: cardNumber.slice(-4),
+                cardHolderName: cardName
+            };
+
+            // Salvar pedido
+            localStorage.setItem('lastOrder', JSON.stringify(orderData));
+
+            // Limpar carrinho
+            localStorage.removeItem('cart');
+
+            // Redirecionar para confirmação
             alert('Pagamento processado com sucesso! Redirecionando...');
-            window.location.href = 'index.html';
+            window.location.href = 'confirmacao.html';
         });
+
+        // Inicializar
+        loadCartTotal();
 
         // Formatar número do cartão
         document.getElementById('card-number').addEventListener('input', function (e) {

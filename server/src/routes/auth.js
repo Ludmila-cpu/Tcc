@@ -81,4 +81,27 @@ router.post('/login', [
     }
 });
 
+// Obter dados do usuário autenticado
+router.get('/me', async (req, res) => {
+    try {
+        const token = req.header('x-auth-token') || req.header('Authorization')?.replace('Bearer ', '');
+
+        if (!token) {
+            return res.status(401).json({ msg: 'Token não fornecido' });
+        }
+
+        const decoded = jwt.verify(token, process.env.JWT_SECRET || 'seu_jwt_secret');
+        const user = await User.findById(decoded.userId).select('-password');
+
+        if (!user) {
+            return res.status(404).json({ msg: 'Usuário não encontrado' });
+        }
+
+        res.json(user);
+    } catch (err) {
+        console.error(err);
+        res.status(401).json({ msg: 'Token inválido' });
+    }
+});
+
 module.exports = router;

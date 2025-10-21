@@ -4,49 +4,85 @@ const Product = require('./models/Product');
 
 const products = [
     {
-        name: 'Maçã Orgânica',
-        description: 'Maçãs frescas e crocantes cultivadas sem agrotóxicos (500g)',
+        name: 'Maçã Fuji',
+        description: 'Maçãs frescas e crocantes cultivadas sem agrotóxicos',
         price: 7.90,
-        image: 'https://images.unsplash.com/photo-1567306226416-28f0efdc88ce?auto=format&fit=crop&w=600&q=80',
+        image: 'https://images.unsplash.com/photo-1619546813926-a78fa6372cd2?w=400&h=400&fit=crop',
         category: 'frutas',
         stock: 50,
         unit: 'kg'
     },
     {
-        name: 'Banana Nanica',
-        description: 'Bananas maduras e doces ideais para lanches (1kg)',
+        name: 'Banana Prata',
+        description: 'Bananas maduras e doces ideais para lanches',
         price: 5.50,
-        image: 'https://images.unsplash.com/photo-1574226516831-e1dff420e43e?auto=format&fit=crop&w=600&q=80',
+        image: 'https://images.unsplash.com/photo-1603833665858-e61d17a86224?w=400&h=400&fit=crop',
         category: 'frutas',
         stock: 80,
         unit: 'kg'
     },
     {
-        name: 'Cenoura',
-        description: 'Cenouras crocantes ricas em betacaroteno (500g)',
+        name: 'Cenoura Orgânica',
+        description: 'Cenouras crocantes ricas em betacaroteno',
         price: 4.20,
-        image: 'https://images.unsplash.com/photo-1582515073490-dc84f5ed9b32?auto=format&fit=crop&w=600&q=80',
+        image: 'https://images.unsplash.com/photo-1447175008436-054170c2e979?w=400&h=400&fit=crop',
         category: 'verduras',
         stock: 100,
         unit: 'kg'
     },
     {
         name: 'Tomate Italiano',
-        description: 'Tomates suculentos ideais para molhos e saladas (500g)',
+        description: 'Tomates suculentos ideais para molhos e saladas',
         price: 8.40,
-        image: 'https://images.unsplash.com/photo-1561136594-7f68413bfae3?auto=format&fit=crop&w=600&q=80',
+        image: 'https://images.unsplash.com/photo-1546094096-0df4bcaaa337?w=400&h=400&fit=crop',
         category: 'verduras',
         stock: 60,
         unit: 'kg'
     },
     {
         name: 'Alface Crespa',
-        description: 'Folhas verdes e frescas para uma salada saudável (unidade)',
+        description: 'Folhas verdes e frescas para saladas saudáveis',
         price: 3.90,
-        image: 'https://images.unsplash.com/photo-1542834369-f10ebf06d3cb?auto=format&fit=crop&w=600&q=80',
+        image: 'https://images.unsplash.com/photo-1622206151226-18ca2c9ab4a1?w=400&h=400&fit=crop',
         category: 'verduras',
         stock: 40,
         unit: 'un'
+    },
+    {
+        name: 'Morango',
+        description: 'Morangos doces e suculentos direto da colheita',
+        price: 12.90,
+        image: 'https://images.unsplash.com/photo-1464965911861-746a04b4bca6?w=400&h=400&fit=crop',
+        category: 'frutas',
+        stock: 30,
+        unit: 'kg'
+    },
+    {
+        name: 'Abacate',
+        description: 'Abacates cremosos ricos em gorduras saudáveis',
+        price: 9.90,
+        image: 'https://images.unsplash.com/photo-1601039641847-7857b994d704?w=400&h=400&fit=crop',
+        category: 'frutas',
+        stock: 45,
+        unit: 'kg'
+    },
+    {
+        name: 'Brócolis',
+        description: 'Brócolis fresco rico em nutrientes e vitaminas',
+        price: 6.50,
+        image: 'https://images.unsplash.com/photo-1459411621453-7b03977f4bfc?w=400&h=400&fit=crop',
+        category: 'verduras',
+        stock: 35,
+        unit: 'kg'
+    },
+    {
+        name: 'Laranja Pera',
+        description: 'Laranjas suculentas perfeitas para sucos naturais',
+        price: 4.90,
+        image: 'https://images.unsplash.com/photo-1557800636-894a64c1696f?w=400&h=400&fit=crop',
+        category: 'frutas',
+        stock: 70,
+        unit: 'kg'
     }
 ];
 

@@ -51,16 +51,22 @@
                 <button class="register-btn" id="btn-limpar" style="margin-top:8px;">Limpar Carrinho</button>
             </div>
             <script>
+                console.log('🛒 Iniciando carrinho.html');
                 function formatBRL(v) { return 'R$ ' + v.toFixed(2).replace('.', ','); }
                 const raw = localStorage.getItem('cart');
+                console.log('📦 localStorage.cart:', raw);
                 const cart = raw ? JSON.parse(raw) : [];
+                console.log('📦 Cart parsed:', cart);
+                console.log('📦 Cart length:', cart.length);
                 const cartContents = document.getElementById('cart-contents');
                 const cartList = document.getElementById('cart-list');
                 const cartResumo = document.getElementById('cart-resumo');
                 if (cart.length === 0) {
+                    console.log('⚠️ Carrinho vazio!');
                     cartContents.innerHTML = '<p>Seu carrinho está vazio.</p>';
                     cartResumo.style.display = 'none';
                 } else {
+                    console.log('✅ Carrinho tem', cart.length, 'itens');
                     cartContents.style.display = 'none';
                     cartResumo.style.display = 'block';
                     let total = 0;
@@ -68,19 +74,19 @@
                     cart.forEach((item, idx) => {
                         const row = document.createElement('div');
                         row.className = 'cart-item';
-                        const subtotal = item.qty * item.price;
+                        const qty = item.quantity || item.qty || 1;
+                        const subtotal = qty * item.price;
                         total += subtotal;
                         // determine image by id if exists
-                        let imgSrc = '';
-                        try { imgSrc = `src/assets/${item.id === 0 ? 'tomate.svg' : item.id === 1 ? 'alface.svg' : 'mel.svg'}` } catch (e) { }
+                        let imgSrc = item.image || 'https://via.placeholder.com/80x80/f0f0f0/666?text=Produto';
                         row.innerHTML = `
-                        <img class="cart-img" src="${imgSrc}" alt="${item.name}" />
+                        <img class="cart-img" src="${imgSrc}" alt="${item.name}" onerror="this.src='https://via.placeholder.com/80x80/f0f0f0/666?text=Produto'" />
                         <div class="cart-info">
                             <div class="cart-name">${item.name}</div>
-                            <div class="cart-price">R$ ${item.price.toFixed(2).replace('.', ',')} each</div>
+                            <div class="cart-price">R$ ${item.price.toFixed(2).replace('.', ',')} cada</div>
                         </div>
                         <div class="cart-controls">
-                            <input type="number" class="cart-qty" min="1" value="${item.qty}" data-idx="${idx}" />
+                            <input type="number" class="cart-qty" min="1" value="${qty}" data-idx="${idx}" />
                             <div class="cart-subtotal">${formatBRL(subtotal)}</div>
                             <button class="remove-item" data-idx="${idx}">Remover</button>
                         </div>
@@ -104,7 +110,8 @@
                             let v = Number(e.currentTarget.value) || 1;
                             if (v < 1) v = 1;
                             e.currentTarget.value = v;
-                            cart[idx].qty = v;
+                            cart[idx].quantity = v;
+                            cart[idx].qty = v; // compatibilidade
                             localStorage.setItem('cart', JSON.stringify(cart));
                             renderCart();
                         });
@@ -127,17 +134,18 @@
                     c.forEach((item, idx) => {
                         const row = document.createElement('div');
                         row.className = 'cart-item';
-                        const subtotal = item.qty * item.price;
+                        const qty = item.quantity || item.qty || 1;
+                        const subtotal = qty * item.price;
                         total2 += subtotal;
-                        let imgSrc = `src/assets/${item.id === 0 ? 'tomate.svg' : item.id === 1 ? 'alface.svg' : 'mel.svg'}`;
+                        let imgSrc = item.image || 'https://via.placeholder.com/80x80/f0f0f0/666?text=Produto';
                         row.innerHTML = `
-                        <img class="cart-img" src="${imgSrc}" alt="${item.name}" />
+                        <img class="cart-img" src="${imgSrc}" alt="${item.name}" onerror="this.src='https://via.placeholder.com/80x80/f0f0f0/666?text=Produto'" />
                         <div class="cart-info">
                             <div class="cart-name">${item.name}</div>
-                            <div class="cart-price">R$ ${item.price.toFixed(2).replace('.', ',')} each</div>
+                            <div class="cart-price">R$ ${item.price.toFixed(2).replace('.', ',')} cada</div>
                         </div>
                         <div class="cart-controls">
-                            <input type="number" class="cart-qty" min="1" value="${item.qty}" data-idx="${idx}" />
+                            <input type="number" class="cart-qty" min="1" value="${qty}" data-idx="${idx}" />
                             <div class="cart-subtotal">${formatBRL(subtotal)}</div>
                             <button class="remove-item" data-idx="${idx}">Remover</button>
                         </div>
@@ -161,7 +169,8 @@
                             let v = Number(e.currentTarget.value) || 1;
                             if (v < 1) v = 1;
                             e.currentTarget.value = v;
-                            c[idx].qty = v;
+                            c[idx].quantity = v;
+                            c[idx].qty = v; // compatibilidade
                             localStorage.setItem('cart', JSON.stringify(c));
                             renderCart();
                         });
@@ -182,7 +191,8 @@
                 // Atualizar contador do carrinho
                 function updateCartCount() {
                     const cartItems = JSON.parse(localStorage.getItem('cart') || '[]');
-                    document.getElementById('cart-count').textContent = cartItems.length;
+                    const totalQty = cartItems.reduce((sum, item) => sum + (item.quantity || item.qty || 0), 0);
+                    document.getElementById('cart-count').textContent = totalQty;
                 }
                 updateCartCount();
             </script>

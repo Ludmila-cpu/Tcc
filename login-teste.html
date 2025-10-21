@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vereco - Login Teste</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="src/assets/Imagem2.svg" alt="Vereco Logo" class="logo" />
+            <div class="image-container">
+                <img src="src/assets/Imagem1.svg" alt="Shopping Illustration" />
+            </div>
+        </div>
+        <div class="login-section">
+            <h2 style="color: #ff6b35; margin-bottom: 20px;">🧪 Login de Teste</h2>
+            <form id="form-login">
+                <input type="text" id="usuario" placeholder="Email" required
+                    style="margin-bottom: 10px; width: 100%; padding: 10px;" />
+                <input type="password" id="senha" placeholder="Senha" required
+                    style="margin-bottom: 20px; width: 100%; padding: 10px;" />
+                <button type="submit" class="login-btn">Entrar</button>
+            </form>
+            <p style="margin-top: 20px; color: #666;">Teste com: teste@vereco.com / teste123</p>
+        </div>
+    </div>
+
+    <script>
+        console.log('🚀 Script de login carregado!');
+
+        document.getElementById('form-login').addEventListener('submit', async function (event) {
+            event.preventDefault();
+            console.log('📝 Formulário enviado!');
+
+            const emailInput = document.getElementById('usuario');
+            const senhaInput = document.getElementById('senha');
+
+            console.log('🔍 Elementos encontrados:', {
+                emailInput: emailInput ? 'OK' : 'ERRO',
+                senhaInput: senhaInput ? 'OK' : 'ERRO'
+            });
+
+            const email = emailInput.value.trim();
+            const password = senhaInput.value.trim();
+
+            console.log('📧 Dados capturados:', { email, password: '***' });
+
+            if (!email || !password) {
+                alert('❌ Preencha todos os campos!');
+                return;
+            }
+
+            try {
+                console.log('🔄 Enviando requisição para backend...');
+
+                const response = await fetch('http://localhost:5000/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+
+                console.log('📡 Status HTTP:', response.status);
+
+                const data = await response.json();
+                console.log('📦 Dados recebidos:', data);
+
+                if (response.ok && data.token) {
+                    localStorage.setItem('authToken', data.token);
+                    console.log('✅ Token salvo:', data.token.substring(0, 20) + '...');
+                    alert('✅ Login realizado com sucesso!');
+                    window.location.href = 'produtos.html';
+                } else {
+                    console.error('❌ Login falhou:', data);
+                    alert('❌ Erro: ' + (data.msg || 'Credenciais inválidas'));
+                }
+            } catch (error) {
+                console.error('💥 Erro na requisição:', error);
+                alert('❌ Erro ao conectar: ' + error.message);
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -29,18 +29,45 @@
   </div>
 
   <script>
-    // Função de login simulada
-    document.getElementById('form-login').addEventListener('submit', function (event) {
+    // Função de login DIRETA (sem api.js)
+    document.getElementById('form-login').addEventListener('submit', async function (event) {
       event.preventDefault();
 
-      const usuario = document.getElementById('usuario').value.trim();
-      const senha = document.getElementById('senha').value.trim();
+      const email = document.getElementById('usuario').value.trim();
+      const password = document.getElementById('senha').value.trim();
 
-      if (usuario && senha) {
-        // Redireciona se os campos estiverem preenchidos
-        window.location.href = 'produtos.html';
-      } else {
+      if (!email || !password) {
         alert('Preencha todos os campos!');
+        return;
+      }
+
+      try {
+        console.log('🔄 Tentando login com:', email);
+
+        const response = await fetch('http://localhost:5000/api/auth/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ email, password })
+        });
+
+        console.log('📡 Status da resposta:', response.status);
+
+        const data = await response.json();
+        console.log('📦 Dados recebidos:', data);
+
+        if (response.ok && data.token) {
+          // Salva o token
+          localStorage.setItem('authToken', data.token);
+          alert('✅ Login realizado com sucesso!');
+          window.location.href = 'produtos.html';
+        } else {
+          alert('❌ Erro: ' + (data.msg || 'Credenciais inválidas'));
+        }
+      } catch (error) {
+        console.error('💥 Erro completo:', error);
+        alert('❌ Erro ao fazer login: ' + error.message);
       }
     });
   </script>
