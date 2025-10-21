@@ -5,22 +5,27 @@ Write-Host "🚀 Iniciando Vereco - E-commerce TCC" -ForegroundColor Green
 Write-Host "=====================================" -ForegroundColor Green
 Write-Host ""
 
+# Obter o diretório do script
+$ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+
 # Função para iniciar o backend
 $backendJob = Start-Job -ScriptBlock {
-    Set-Location "C:\Users\ludmila_soares\Documents\GitHub\Tcc\server"
+    param($dir)
+    Set-Location "$dir\backend"
     Write-Host "🔧 Iniciando Backend (Node.js + Express)..." -ForegroundColor Cyan
     npm start
-}
+} -ArgumentList $ScriptDir
 
 # Aguardar 2 segundos para o backend inicializar
 Start-Sleep -Seconds 2
 
 # Função para iniciar o frontend
 $frontendJob = Start-Job -ScriptBlock {
-    Set-Location "C:\Users\ludmila_soares\Documents\GitHub\Tcc"
+    param($dir)
+    Set-Location "$dir\frontend"
     Write-Host "🎨 Iniciando Frontend (Vite + React)..." -ForegroundColor Magenta
     npm run dev
-}
+} -ArgumentList $ScriptDir
 
 Write-Host ""
 Write-Host "✅ Backend iniciado em segundo plano (Job ID: $($backendJob.Id))" -ForegroundColor Green

@@ -11,14 +11,14 @@ echo.
 
 REM Iniciar Backend em nova janela
 echo [1/2] Iniciando Backend (Node.js + Express)...
-start "Vereco Backend - Port 5000" cmd /k "cd /d %~dp0server && npm start"
+start "Vereco Backend - Port 5000" cmd /k "cd /d %~dp0backend && npm start"
 
 REM Aguardar 3 segundos
 timeout /t 3 /nobreak >nul
 
 REM Iniciar Frontend em nova janela
 echo [2/2] Iniciando Frontend (Vite + React)...
-start "Vereco Frontend - Port 5173" cmd /k "cd /d %~dp0 && npm run dev"
+start "Vereco Frontend - Port 5173" cmd /k "cd /d %~dp0frontend && npm run dev"
 
 echo.
 echo ========================================
