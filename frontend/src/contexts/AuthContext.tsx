@@ -1,5 +1,11 @@
-import React, { createContext, useState, useContext, useEffect, ReactNode } from 'react';
-import { authAPI, User } from '../services/api';
+import React, {
+  createContext,
+  useState,
+  useContext,
+  useEffect,
+  ReactNode
+} from "react";
+import { authAPI, User } from "../services/api";
 
 interface AuthContextData {
   user: User | null;
@@ -14,7 +20,9 @@ interface AuthContextData {
 
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
-export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const AuthProvider: React.FC<{ children: ReactNode }> = ({
+  children
+}) => {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -22,28 +30,28 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   // Carregar usuário do localStorage ao iniciar
   useEffect(() => {
     const loadStoredData = async () => {
-      const storedToken = localStorage.getItem('token');
-      const storedUser = localStorage.getItem('user');
+      const storedToken = localStorage.getItem("token");
+      const storedUser = localStorage.getItem("user");
 
       if (storedToken && storedUser) {
         setToken(storedToken);
         setUser(JSON.parse(storedUser));
-        
+
         // Tentar buscar dados atualizados do usuário
         try {
           const response = await authAPI.getProfile();
           setUser(response.user);
-          localStorage.setItem('user', JSON.stringify(response.user));
+          localStorage.setItem("user", JSON.stringify(response.user));
         } catch (error) {
-          console.error('Erro ao carregar perfil:', error);
+          console.error("Erro ao carregar perfil:", error);
           // Se falhar, limpar dados inválidos
-          localStorage.removeItem('token');
-          localStorage.removeItem('user');
+          localStorage.removeItem("token");
+          localStorage.removeItem("user");
           setToken(null);
           setUser(null);
         }
       }
-      
+
       setLoading(false);
     };
 
@@ -52,20 +60,25 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const login = async (email: string, password: string) => {
     try {
+      console.log("🔐 Tentando fazer login...");
       const response = await authAPI.login({ email, password });
+      console.log("✅ Resposta do login:", response);
       const { token } = response;
 
       // Salvar token
-      localStorage.setItem('token', token);
+      localStorage.setItem("token", token);
       setToken(token);
 
+      console.log("📞 Buscando dados do usuário...");
       // Buscar dados do usuário
       const userResponse = await authAPI.getProfile();
+      console.log("✅ Resposta do perfil:", userResponse);
       setUser(userResponse.user);
-      localStorage.setItem('user', JSON.stringify(userResponse.user));
+      localStorage.setItem("user", JSON.stringify(userResponse.user));
+      console.log("✅ Login concluído com sucesso!");
     } catch (error: any) {
-      console.error('Erro no login:', error);
-      throw new Error(error.response?.data?.msg || 'Erro ao fazer login');
+      console.error("❌ Erro no login:", error);
+      throw new Error(error.response?.data?.msg || "Erro ao fazer login");
     }
   };
 
@@ -75,22 +88,22 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       const { token } = response;
 
       // Salvar token
-      localStorage.setItem('token', token);
+      localStorage.setItem("token", token);
       setToken(token);
 
       // Buscar dados do usuário
       const userResponse = await authAPI.getProfile();
       setUser(userResponse.user);
-      localStorage.setItem('user', JSON.stringify(userResponse.user));
+      localStorage.setItem("user", JSON.stringify(userResponse.user));
     } catch (error: any) {
-      console.error('Erro no registro:', error);
-      throw new Error(error.response?.data?.msg || 'Erro ao fazer registro');
+      console.error("Erro no registro:", error);
+      throw new Error(error.response?.data?.msg || "Erro ao fazer registro");
     }
   };
 
   const logout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
     setToken(null);
     setUser(null);
   };
@@ -99,10 +112,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     try {
       const response = await authAPI.updateProfile(data);
       setUser(response.user);
-      localStorage.setItem('user', JSON.stringify(response.user));
+      localStorage.setItem("user", JSON.stringify(response.user));
     } catch (error: any) {
-      console.error('Erro ao atualizar perfil:', error);
-      throw new Error(error.response?.data?.msg || 'Erro ao atualizar perfil');
+      console.error("Erro ao atualizar perfil:", error);
+      throw new Error(error.response?.data?.msg || "Erro ao atualizar perfil");
     }
   };
 
@@ -116,7 +129,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         login,
         register,
         logout,
-        updateUser,
+        updateUser
       }}
     >
       {children}
@@ -127,7 +140,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 };

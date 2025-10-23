@@ -1,0 +1,608 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2025-10-23T00:00:00.000Z",
+  "__export_source": "insomnia.desktop.app:v2023.5.8",
+  "resources": [
+    {
+      "_id": "req_health",
+      "parentId": "fld_root",
+      "modified": 1698019200000,
+      "created": 1698019200000,
+      "url": "{{ _.base_url }}/health",
+      "name": "Health Check",
+      "description": "Verificar se a API está funcionando",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -1698019200000,
+      "isPrivate": false,
+      "_type": "request"
+    },
+    {
+      "_id": "req_root",
+      "parentId": "fld_root",
+      "modified": 1698019200000,
+      "created": 1698019200000,
+      "url": "{{ _.base_url }}/",
+      "name": "Rota Principal",
+      "description": "Informações da API e endpoints disponíveis",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -1698019200001,
+      "_type": "request"
+    },
+    {
+      "_id": "req_register",
+      "parentId": "fld_auth",
+      "modified": 1698019200000,
+      "created": 1698019200000,
+      "url": "{{ _.base_url }}/api/auth/register",
+      "name": "Registrar Usuário",
+      "description": "Criar nova conta de usuário",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"João Silva\",\n  \"email\": \"joao@exemplo.com\",\n  \"password\": \"123456\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1698019200000,
+      "isPrivate": false,
+      "_type": "request"
+    },
+    {
+      "_id": "req_login",
+      "parentId": "fld_auth",
+      "modified": 1698019200000,
+      "created": 1698019200000,
+      "url": "{{ _.base_url }}/api/auth/login",
+      "name": "Login",
+      "description": "Fazer login e obter token JWT",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"joao@exemplo.com\",\n  \"password\": \"123456\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1698019200001,
+      "isPrivate": false,
+      "_type": "request"
+    },
+    {
+      "_id": "req_me",
+      "parentId": "fld_auth",
+      "modified": 1698019200000,
+      "created": 1698019200000,
+      "url": "{{ _.base_url }}/api/auth/me",
+      "name": "Obter Usuário Autenticado",
+      "description": "Buscar dados do usuário logado",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "x-auth-token",
+          "value": "{{ _.auth_token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1698019200002,
+      "isPrivate": false,
+      "_type": "request"
+    },
+    {
+      "_id": "req_products_list",
+      "parentId": "fld_products",
+      "modified": 1698019200000,
+      "created": 1698019200000,
+      "url": "{{ _.base_url }}/api/products",
+      "name": "Listar Produtos",
+      "description": "Buscar todos os produtos com filtros opcionais",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -1698019200000,
+      "isPrivate": false,
+      "_type": "request"
+    },
+    {
+      "_id": "req_products_list_filtered",
+      "parentId": "fld_products",
+      "modified": 1698019200000,
+      "created": 1698019200000,
+      "url": "{{ _.base_url }}/api/products?category=roupas&minPrice=20&maxPrice=100&page=1&limit=10",
+      "name": "Listar Produtos (com Filtros)",
+      "description": "Buscar produtos com categoria, preço e paginação",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {
+          "name": "category",
+          "value": "roupas",
+          "disabled": false
+        },
+        {
+          "name": "minPrice",
+          "value": "20",
+          "disabled": false
+        },
+        {
+          "name": "maxPrice",
+          "value": "100",
+          "disabled": false
+        },
+        {
+          "name": "page",
+          "value": "1",
+          "disabled": false
+        },
+        {
+          "name": "limit",
+          "value": "10",
+          "disabled": false
+        }
+      ],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -1698019200001,
+      "isPrivate": false,
+      "_type": "request"
+    },
+    {
+      "_id": "req_products_get_by_id",
+      "parentId": "fld_products",
+      "modified": 1698019200000,
+      "created": 1698019200000,
+      "url": "{{ _.base_url }}/api/products/{{ _.product_id }}",
+      "name": "Buscar Produto por ID",
+      "description": "Obter detalhes de um produto específico",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -1698019200002,
+      "isPrivate": false,
+      "_type": "request"
+    },
+    {
+      "_id": "req_products_create",
+      "parentId": "fld_products",
+      "modified": 1698019200000,
+      "created": 1698019200000,
+      "url": "{{ _.base_url }}/api/products",
+      "name": "Criar Produto (Admin)",
+      "description": "Adicionar novo produto (requer admin)",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"Camiseta Básica\",\n  \"description\": \"Camiseta 100% algodão\",\n  \"price\": 49.90,\n  \"category\": \"roupas\",\n  \"stock\": 50,\n  \"image\": \"https://exemplo.com/imagem.jpg\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "x-auth-token",
+          "value": "{{ _.auth_token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1698019200003,
+      "isPrivate": false,
+      "_type": "request"
+    },
+    {
+      "_id": "req_products_update",
+      "parentId": "fld_products",
+      "modified": 1698019200000,
+      "created": 1698019200000,
+      "url": "{{ _.base_url }}/api/products/{{ _.product_id }}",
+      "name": "Atualizar Produto (Admin)",
+      "description": "Editar produto existente (requer admin)",
+      "method": "PUT",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"price\": 39.90,\n  \"stock\": 100\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "x-auth-token",
+          "value": "{{ _.auth_token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1698019200004,
+      "isPrivate": false,
+      "_type": "request"
+    },
+    {
+      "_id": "req_products_delete",
+      "parentId": "fld_products",
+      "modified": 1698019200000,
+      "created": 1698019200000,
+      "url": "{{ _.base_url }}/api/products/{{ _.product_id }}",
+      "name": "Deletar Produto (Admin)",
+      "description": "Remover produto (requer admin)",
+      "method": "DELETE",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "x-auth-token",
+          "value": "{{ _.auth_token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1698019200005,
+      "isPrivate": false,
+      "_type": "request"
+    },
+    {
+      "_id": "req_cart_get",
+      "parentId": "fld_cart",
+      "modified": 1698019200000,
+      "created": 1698019200000,
+      "url": "{{ _.base_url }}/api/cart",
+      "name": "Obter Carrinho",
+      "description": "Buscar carrinho do usuário autenticado",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "x-auth-token",
+          "value": "{{ _.auth_token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1698019200000,
+      "isPrivate": false,
+      "_type": "request"
+    },
+    {
+      "_id": "req_cart_add",
+      "parentId": "fld_cart",
+      "modified": 1698019200000,
+      "created": 1698019200000,
+      "url": "{{ _.base_url }}/api/cart/add",
+      "name": "Adicionar Item ao Carrinho",
+      "description": "Adicionar produto ao carrinho",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"productId\": \"{{ _.product_id }}\",\n  \"quantity\": 2\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "x-auth-token",
+          "value": "{{ _.auth_token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1698019200001,
+      "isPrivate": false,
+      "_type": "request"
+    },
+    {
+      "_id": "req_cart_update",
+      "parentId": "fld_cart",
+      "modified": 1698019200000,
+      "created": 1698019200000,
+      "url": "{{ _.base_url }}/api/cart/update/{{ _.product_id }}",
+      "name": "Atualizar Quantidade",
+      "description": "Atualizar quantidade de um item no carrinho",
+      "method": "PUT",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"quantity\": 5\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "x-auth-token",
+          "value": "{{ _.auth_token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1698019200002,
+      "isPrivate": false,
+      "_type": "request"
+    },
+    {
+      "_id": "req_cart_remove",
+      "parentId": "fld_cart",
+      "modified": 1698019200000,
+      "created": 1698019200000,
+      "url": "{{ _.base_url }}/api/cart/remove/{{ _.product_id }}",
+      "name": "Remover Item do Carrinho",
+      "description": "Remover produto específico do carrinho",
+      "method": "DELETE",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "x-auth-token",
+          "value": "{{ _.auth_token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1698019200003,
+      "isPrivate": false,
+      "_type": "request"
+    },
+    {
+      "_id": "req_cart_clear",
+      "parentId": "fld_cart",
+      "modified": 1698019200000,
+      "created": 1698019200000,
+      "url": "{{ _.base_url }}/api/cart/clear",
+      "name": "Limpar Carrinho",
+      "description": "Remover todos os itens do carrinho",
+      "method": "DELETE",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "x-auth-token",
+          "value": "{{ _.auth_token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1698019200004,
+      "isPrivate": false,
+      "_type": "request"
+    },
+    {
+      "_id": "req_orders_create",
+      "parentId": "fld_orders",
+      "modified": 1698019200000,
+      "created": 1698019200000,
+      "url": "{{ _.base_url }}/api/orders",
+      "name": "Criar Pedido",
+      "description": "Criar pedido a partir do carrinho",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"shippingAddress\": {\n    \"street\": \"Rua das Flores\",\n    \"number\": \"123\",\n    \"city\": \"São Paulo\",\n    \"state\": \"SP\",\n    \"zipCode\": \"01234-567\"\n  },\n  \"paymentMethod\": \"credit_card\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "x-auth-token",
+          "value": "{{ _.auth_token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1698019200000,
+      "isPrivate": false,
+      "_type": "request"
+    },
+    {
+      "_id": "req_orders_list",
+      "parentId": "fld_orders",
+      "modified": 1698019200000,
+      "created": 1698019200000,
+      "url": "{{ _.base_url }}/api/orders",
+      "name": "Listar Pedidos do Usuário",
+      "description": "Buscar histórico de pedidos",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "x-auth-token",
+          "value": "{{ _.auth_token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1698019200001,
+      "isPrivate": false,
+      "_type": "request"
+    },
+    {
+      "_id": "req_orders_get_by_id",
+      "parentId": "fld_orders",
+      "modified": 1698019200000,
+      "created": 1698019200000,
+      "url": "{{ _.base_url }}/api/orders/{{ _.order_id }}",
+      "name": "Buscar Pedido por ID",
+      "description": "Obter detalhes de um pedido específico",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "x-auth-token",
+          "value": "{{ _.auth_token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1698019200002,
+      "isPrivate": false,
+      "_type": "request"
+    },
+    {
+      "_id": "req_orders_update_status",
+      "parentId": "fld_orders",
+      "modified": 1698019200000,
+      "created": 1698019200000,
+      "url": "{{ _.base_url }}/api/orders/{{ _.order_id }}/status",
+      "name": "Atualizar Status (Admin)",
+      "description": "Alterar status do pedido (requer admin)",
+      "method": "PUT",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"status\": \"shipped\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "x-auth-token",
+          "value": "{{ _.auth_token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1698019200003,
+      "isPrivate": false,
+      "_type": "request"
+    },
+    {
+      "_id": "req_orders_admin_all",
+      "parentId": "fld_orders",
+      "modified": 1698019200000,
+      "created": 1698019200000,
+      "url": "{{ _.base_url }}/api/orders/admin/all",
+      "name": "Listar Todos os Pedidos (Admin)",
+      "description": "Buscar todos os pedidos de todos os usuários",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "x-auth-token",
+          "value": "{{ _.auth_token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1698019200004,
+      "isPrivate": false,
+      "_type": "request"
+    },
+    {
+      "_id": "fld_root",
+      "parentId": "wrk_main",
+      "modified": 1698019200000,
+      "created": 1698019200000,
+      "name": "🏠 Sistema",
+      "description": "Rotas de teste e health check",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1698019200000,
+      "_type": "request_group"
+    },
+    {
+      "_id": "fld_auth",
+      "parentId": "wrk_main",
+      "modified": 1698019200000,
+      "created": 1698019200000,
+      "name": "🔐 Autenticação",
+      "description": "Registro, login e autenticação de usuários",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1698019200001,
+      "_type": "request_group"
+    },
+    {
+      "_id": "fld_products",
+      "parentId": "wrk_main",
+      "modified": 1698019200000,
+      "created": 1698019200000,
+      "name": "📦 Produtos",
+      "description": "Gerenciamento de produtos",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1698019200002,
+      "_type": "request_group"
+    },
+    {
+      "_id": "fld_cart",
+      "parentId": "wrk_main",
+      "modified": 1698019200000,
+      "created": 1698019200000,
+      "name": "🛒 Carrinho",
+      "description": "Gerenciamento do carrinho de compras",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1698019200003,
+      "_type": "request_group"
+    },
+    {
+      "_id": "fld_orders",
+      "parentId": "wrk_main",
+      "modified": 1698019200000,
+      "created": 1698019200000,
+      "name": "📋 Pedidos",
+      "description": "Gerenciamento de pedidos",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1698019200004,
+      "_type": "request_group"
+    },
+    {
+      "_id": "wrk_main",
+      "parentId": null,
+      "modified": 1698019200000,
+      "created": 1698019200000,
+      "name": "API Vereco - Backend",
+      "description": "Coleção completa de rotas da API Vereco",
+      "scope": "collection",
+      "_type": "workspace"
+    },
+    {
+      "_id": "env_main",
+      "parentId": "wrk_main",
+      "modified": 1698019200000,
+      "created": 1698019200000,
+      "name": "Base Environment",
+      "data": {
+        "base_url": "http://localhost:5000",
+        "auth_token": "",
+        "product_id": "",
+        "order_id": ""
+      },
+      "dataPropertyOrder": {
+        "&": ["base_url", "auth_token", "product_id", "order_id"]
+      },
+      "color": null,
+      "isPrivate": false,
+      "metaSortKey": 1698019200000,
+      "_type": "environment"
+    }
+  ]
+}

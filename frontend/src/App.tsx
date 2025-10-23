@@ -27,38 +27,11 @@ const PrivateRoute: React.FC<{ children: React.ReactElement }> = ({
   return isAuthenticated ? children : <Navigate to="/login" replace />;
 };
 
-// Componente para redirecionar se já estiver autenticado
-const PublicRoute: React.FC<{ children: React.ReactElement }> = ({
-  children
-}) => {
-  const { isAuthenticated, loading } = useAuth();
-
-  if (loading) {
-    return <Loading />;
-  }
-
-  return !isAuthenticated ? children : <Navigate to="/" replace />;
-};
-
 const AppRoutes: React.FC = () => {
   return (
     <Routes>
-      <Route
-        path="/"
-        element={
-          <PublicRoute>
-            <HomePage />
-          </PublicRoute>
-        }
-      />
-      <Route
-        path="/login"
-        element={
-          <PublicRoute>
-            <LoginPage />
-          </PublicRoute>
-        }
-      />
+      <Route path="/" element={<HomePage />} />
+      <Route path="/login" element={<LoginPage />} />
       <Route
         path="/produtos"
         element={
