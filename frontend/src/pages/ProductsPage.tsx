@@ -1,38 +1,34 @@
-import React, { useState, useEffect } from 'react';
-import { productsAPI, Product } from '../services/api';
-import { useCart } from '../contexts/CartContext';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
-import ProductCard from '../components/ProductCard';
-import Loading from '../components/Loading';
-import toast from 'react-hot-toast';
+import React, { useState, useEffect, useCallback } from "react";
+import { productsAPI, Product } from "../services/api";
+import { useCart } from "../contexts/CartContext";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
+import ProductCard from "../components/ProductCard";
+import Loading from "../components/Loading";
+import toast from "react-hot-toast";
 
 const ProductsPage: React.FC = () => {
   const { addToCart } = useCart();
-  
+
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
-  
+
   // Filtros
-  const [category, setCategory] = useState('');
-  const [search, setSearch] = useState('');
+  const [category, setCategory] = useState("");
+  const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalProducts, setTotalProducts] = useState(0);
 
-  useEffect(() => {
-    loadProducts();
-  }, [category, search, page]);
-
-  const loadProducts = async () => {
+  const loadProducts = useCallback(async () => {
     setLoading(true);
-    
+
     try {
       const params: any = {
         page,
-        limit: 9,
+        limit: 9
       };
-      
+
       if (category) params.category = category;
       if (search) params.search = search;
 
@@ -41,12 +37,16 @@ const ProductsPage: React.FC = () => {
       setTotalPages(response.pagination.totalPages);
       setTotalProducts(response.pagination.totalProducts);
     } catch (err: any) {
-      console.error('Erro ao carregar produtos:', err);
-      toast.error('Erro ao carregar produtos');
+      console.error("Erro ao carregar produtos:", err);
+      toast.error("Erro ao carregar produtos");
     } finally {
       setLoading(false);
     }
-  };
+  }, [category, search, page]);
+
+  useEffect(() => {
+    loadProducts();
+  }, [loadProducts]);
 
   const handleAddToCart = async (productId: string) => {
     try {
@@ -54,7 +54,7 @@ const ProductsPage: React.FC = () => {
       // O toast já é exibido pelo CartContext
     } catch (err: any) {
       // O toast de erro já é exibido pelo CartContext
-      console.error('Erro ao adicionar ao carrinho:', err);
+      console.error("Erro ao adicionar ao carrinho:", err);
     }
   };
 
@@ -67,17 +67,19 @@ const ProductsPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-100">
       <Header />
-      
-      <div className="max-w-7xl mx-auto p-8">
 
+      <div className="max-w-7xl mx-auto p-8">
         {/* Título e contadores */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Produtos Orgânicos</h1>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            Produtos Orgânicos
+          </h1>
           <p className="text-gray-600">
-            {totalProducts} produto{totalProducts !== 1 ? 's' : ''} encontrado{totalProducts !== 1 ? 's' : ''}
+            {totalProducts} produto{totalProducts !== 1 ? "s" : ""} encontrado
+            {totalProducts !== 1 ? "s" : ""}
           </p>
         </div>
-        
+
         {/* Filtros */}
         <div className="bg-white p-6 rounded-lg shadow-md mb-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -94,7 +96,7 @@ const ProductsPage: React.FC = () => {
                 Buscar
               </button>
             </form>
-            
+
             {/* Categoria */}
             <div>
               <select
@@ -113,13 +115,13 @@ const ProductsPage: React.FC = () => {
               </select>
             </div>
           </div>
-          
+
           {/* Limpar filtros */}
           {(category || search) && (
             <button
               onClick={() => {
-                setCategory('');
-                setSearch('');
+                setCategory("");
+                setSearch("");
                 setPage(1);
               }}
               className="mt-4 text-sm text-primary hover:text-primary-dark"
@@ -128,7 +130,7 @@ const ProductsPage: React.FC = () => {
             </button>
           )}
         </div>
-        
+
         {/* Lista de produtos */}
         {loading ? (
           <Loading />
@@ -143,7 +145,7 @@ const ProductsPage: React.FC = () => {
                 />
               ))}
             </div>
-            
+
             {/* Paginação */}
             {totalPages > 1 && (
               <div className="mt-8 flex justify-center items-center space-x-2">
@@ -154,11 +156,11 @@ const ProductsPage: React.FC = () => {
                 >
                   Anterior
                 </button>
-                
+
                 <span className="px-4 py-2">
                   Página {page} de {totalPages}
                 </span>
-                
+
                 <button
                   onClick={() => setPage(page + 1)}
                   disabled={page === totalPages}
@@ -175,13 +177,13 @@ const ProductsPage: React.FC = () => {
             {(category || search) && (
               <button
                 onClick={() => {
-                  setCategory('');
-                  setSearch('');
+                  setCategory("");
+                  setSearch("");
                   setPage(1);
                 }}
                 className="mt-4 text-primary hover:text-primary-dark"
               >
-                  Ver todos os produtos
+                Ver todos os produtos
               </button>
             )}
           </div>
