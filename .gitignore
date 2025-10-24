@@ -34,7 +34,7 @@
 
 # Environment files (sensitive)
 .env
-.env.*
+.env
 
 # Logs
 logs
