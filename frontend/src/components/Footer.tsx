@@ -9,11 +9,8 @@ const Footer: React.FC = () => {
     <footer className="bg-gray-900 text-gray-300 mt-auto">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          {/* Logo e Descrição */}
+          {/* Descrição */}
           <div className="col-span-1 md:col-span-2">
-            <div className="flex items-center mb-4">
-              <img src="/Imagem2.svg" alt="Vereco Logo" className="h-10" />
-            </div>
             <p className="text-gray-400 mb-4">
               Produtos orgânicos frescos e sustentáveis, direto dos produtores locais para sua casa.
             </p>

@@ -21,14 +21,6 @@ const Header: React.FC = () => {
     <header className="bg-white shadow-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center py-4">
-          {/* Logo */}
-          <div 
-            onClick={() => navigate('/produtos')}
-            className="flex items-center cursor-pointer"
-          >
-            <img src="/Imagem2.svg" alt="Vereco Logo" className="h-10" />
-          </div>
-
           {/* Navigation */}
           <nav className="flex items-center space-x-6">
             <button

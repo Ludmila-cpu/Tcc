@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import Imagem1 from "../assets/Imagem1.svg";
-import Imagem2 from "../assets/Imagem2.svg";
 import Footer from "../components/Footer";
 
 const HomePage: React.FC = () => {
@@ -32,8 +31,6 @@ const HomePage: React.FC = () => {
     <div className="min-h-screen bg-white">
       {/* Navegação */}
       <nav className="flex justify-between items-center px-[5%] py-5 bg-white shadow-sm sticky top-0 z-50">
-        <img src={Imagem2} alt="Vereco Logo" className="h-10" />
-
         <ul className="flex gap-8 list-none m-0 p-0">
           <li>
             <a
@@ -161,11 +158,6 @@ const HomePage: React.FC = () => {
             </button>
 
             <div className="text-center mb-8">
-              <img
-                src={Imagem2}
-                alt="Vereco Logo"
-                className="h-12 mx-auto mb-4"
-              />
               <h2 className="text-2xl text-[#333] mb-2">Bem-vindo de volta!</h2>
             </div>
 

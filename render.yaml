@@ -1,0 +1,21 @@
+services:
+  # Backend API
+  - type: web
+    name: vereco-backend
+    env: node
+    region: oregon
+    plan: free
+    buildCommand: cd backend && npm install
+    startCommand: cd backend && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGODB_URI
+        sync: false  # Configure no painel do Render
+      - key: JWT_SECRET
+        sync: false  # Configure no painel do Render
+      - key: PORT
+        value: 5000
+      - key: ALLOWED_ORIGINS
+        sync: false  # Configure no painel do Render (ex: https://seu-site.vercel.app)
+    healthCheckPath: /health

@@ -79,11 +79,6 @@ const LoginPage: React.FC = () => {
     <div className="min-h-screen bg-primary flex items-center justify-center p-4">
       <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
         <div className="text-center mb-8">
-          <img
-            src="/Imagem2.svg"
-            alt="Vereco Logo"
-            className="w-40 mx-auto mb-4"
-          />
           <h2 className="text-2xl font-bold text-gray-900">
             {isLogin ? "Bem-vindo de volta!" : "Criar conta"}
           </h2>
