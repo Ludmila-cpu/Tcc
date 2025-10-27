@@ -123,8 +123,14 @@ app.use(notFound);
 // Middleware de tratamento de erros (deve ser o último)
 app.use(errorHandler);
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-    console.log(`✓ Servidor rodando na porta ${PORT}`);
-    console.log(`✓ Ambiente: ${process.env.NODE_ENV || 'development'}`);
-});
+// Para desenvolvimento local
+if (process.env.NODE_ENV !== 'production') {
+    const PORT = process.env.PORT || 5000;
+    app.listen(PORT, () => {
+        console.log(`✓ Servidor rodando na porta ${PORT}`);
+        console.log(`✓ Ambiente: ${process.env.NODE_ENV || 'development'}`);
+    });
+}
+
+// Exportar para Vercel serverless
+module.exports = app;

@@ -1,21 +1,22 @@
 # 🚀 Guia de Deploy - Vereco E-commerce
 
-Este guia explica como fazer o deploy do projeto Vereco (backend + frontend) usando serviços gratuitos.
+Este guia explica como fazer o deploy do projeto Vereco (backend + frontend) usando Vercel (gratuito).
 
 ## 📋 Pré-requisitos
 
-- [ ] Conta no [GitHub](https://github.com)
-- [ ] Conta no [Render](https://render.com) (para o backend)
-- [ ] Conta no [Vercel](https://vercel.com) (para o frontend)
-- [ ] MongoDB Atlas configurado (você já tem!)
+- [ ] Conta no [GitHub](https://github.com) ✅ (você já tem!)
+- [ ] Conta no [Vercel](https://vercel.com) (gratuita)
+- [ ] MongoDB Atlas configurado ✅ (você já tem!)
 
 ---
 
 ## 🔧 Parte 1: Preparação
 
-### 1.1 Commit e Push para o GitHub
+### 1.1 Verificar que está tudo commitado
 
 ```bash
+git status
+# Se houver alterações:
 git add .
 git commit -m "Preparar projeto para deploy"
 git push origin main
@@ -23,31 +24,237 @@ git push origin main
 
 ---
 
-## 🖥️ Parte 2: Deploy do Backend (Render)
+## 🖥️ Parte 2: Deploy do Backend na Vercel
 
-### 2.1 Criar Web Service no Render
+### 2.1 Fazer Deploy do Backend
 
-1. Acesse [render.com](https://render.com) e faça login
-2. Clique em **"New +"** → **"Web Service"**
-3. Conecte seu repositório GitHub `Ludmila-cpu/Tcc`
+1. Acesse [vercel.com](https://vercel.com) e faça login com GitHub
+2. Clique em **"Add New"** → **"Project"**
+3. Selecione o repositório `Ludmila-cpu/Tcc`
 4. Configure:
-   - **Name**: `vereco-backend` (ou nome de sua preferência)
-   - **Region**: `Oregon (US West)`
-   - **Branch**: `main`
-   - **Root Directory**: `backend`
-   - **Runtime**: `Node`
-   - **Build Command**: `npm install`
-   - **Start Command**: `npm start`
-   - **Plan**: `Free`
+   - **Project Name**: `vereco-backend` (ou o que preferir)
+   - **Framework Preset**: Other
+   - **Root Directory**: `backend` ← **IMPORTANTE!**
+   - **Build Command**: (deixe vazio)
+   - **Output Directory**: (deixe vazio)
+   - **Install Command**: `npm install`
 
 ### 2.2 Configurar Variáveis de Ambiente
 
-Na página do seu serviço, vá em **"Environment"** e adicione:
+Antes de clicar em "Deploy", adicione as variáveis de ambiente:
+
+Clique em **"Environment Variables"** e adicione:
 
 ```
 MONGODB_URI=mongodb+srv://vereco_user:Pacaembu1@cluster0.twfwgex.mongodb.net/?appName=Cluster0
 JWT_SECRET=minha_chave_secreta_super_segura_12345
-PORT=5000
+NODE_ENV=production
+```
+
+**IMPORTANTE:** Não adicione `ALLOWED_ORIGINS` agora. Você vai adicionar depois que tiver a URL do frontend.
+
+### 2.3 Deploy
+
+1. Clique em **"Deploy"**
+2. Aguarde o build (2-3 minutos)
+3. Anote a URL do backend (será algo como: `https://vereco-backend.vercel.app`)
+
+### 2.4 Testar o Backend
+
+Acesse no navegador:
+```
+https://seu-backend.vercel.app/health
+```
+
+Você deve ver: `{"success":true,"status":"OK",...}`
+
+---
+
+## 🌐 Parte 3: Deploy do Frontend na Vercel
+
+### 3.1 Atualizar Variável de Ambiente do Frontend
+
+**ANTES de fazer deploy do frontend**, atualize o arquivo `.env.production`:
+
+No seu projeto local:
+```bash
+# Edite: frontend/.env.production
+VITE_API_URL=https://seu-backend.vercel.app
+```
+
+Substitua `seu-backend.vercel.app` pela URL real do backend (da Parte 2.3).
+
+Faça commit:
+```bash
+git add frontend/.env.production
+git commit -m "Atualizar URL do backend em produção"
+git push origin main
+```
+
+### 3.2 Deploy na Vercel
+
+1. Na Vercel, clique em **"Add New"** → **"Project"** novamente
+2. Selecione o mesmo repositório `Ludmila-cpu/Tcc`
+3. Configure:
+   - **Project Name**: `vereco-frontend` (ou o que preferir)
+   - **Framework Preset**: Vite
+   - **Root Directory**: `frontend` ← **IMPORTANTE!**
+   - **Build Command**: `npm run build`
+   - **Output Directory**: `dist`
+   - **Install Command**: `npm install`
+
+4. Em **"Environment Variables"**, adicione:
+   ```
+   VITE_API_URL=https://seu-backend.vercel.app
+   ```
+
+5. Clique em **"Deploy"**
+6. Aguarde o deploy (2-5 minutos)
+
+### 3.3 Anote a URL do Frontend
+
+A Vercel vai dar uma URL tipo: `https://vereco-frontend.vercel.app`
+
+---
+
+## 🔄 Parte 4: Configurar CORS no Backend (IMPORTANTE!)
+
+Agora que você tem a URL do frontend, precisa **atualizar o backend**:
+
+1. Vá para o dashboard da Vercel
+2. Acesse o projeto do **backend** (`vereco-backend`)
+3. Vá em **Settings** → **Environment Variables**
+4. **Adicione** uma nova variável:
+   ```
+   Name: ALLOWED_ORIGINS
+   Value: https://vereco-frontend.vercel.app
+   ```
+   (Substitua pela URL real do seu frontend)
+
+5. Clique em **"Save"**
+6. Vá em **"Deployments"** e clique em "Redeploy" no último deployment
+
+Aguarde o redeploy (1-2 minutos).
+
+---
+
+## ✅ Parte 5: Testar o Sistema Completo
+
+1. Acesse seu site na URL do frontend: `https://vereco-frontend.vercel.app`
+2. Crie uma conta nova
+3. Faça login
+4. Navegue pelos produtos
+5. Adicione itens ao carrinho
+6. Faça um pedido
+
+🎉 Se tudo funcionar, seu sistema está no ar!
+
+---
+
+## 🔧 Comandos Úteis
+
+### Atualizar o Deploy
+
+Sempre que fizer mudanças no código:
+
+```bash
+git add .
+git commit -m "Descrição das mudanças"
+git push origin main
+```
+
+A Vercel fará **redeploy automático** de ambos (backend e frontend).
+
+### Ver Logs
+
+**Backend:**
+1. Dashboard Vercel → Projeto backend → **Deployments**
+2. Clique no último deploy → **View Function Logs**
+
+**Frontend:**
+1. Dashboard Vercel → Projeto frontend → **Deployments**
+2. Clique no último deploy → Veja os logs de build
+
+---
+
+## 🐛 Troubleshooting
+
+### Backend não conecta ao MongoDB
+
+✅ **Solução:**
+- No MongoDB Atlas, vá em **Network Access**
+- Adicione `0.0.0.0/0` aos IPs permitidos (permite todos)
+
+### Frontend não conecta ao Backend (CORS error)
+
+✅ **Solução:**
+- Verifique se `ALLOWED_ORIGINS` no backend tem a URL correta do frontend
+- Certifique-se de fazer redeploy do backend após adicionar a variável
+
+### Build do Frontend falha
+
+✅ **Solução:**
+- Verifique se `VITE_API_URL` está configurado
+- Rode `npm run build` localmente para ver erros:
+  ```bash
+  cd frontend
+  npm run build
+  ```
+
+### Erro 404 ao acessar rotas no frontend
+
+✅ **Solução:**
+- O `vercel.json` no frontend já está configurado com rewrites
+- Se ainda der erro, verifique se o arquivo existe em `frontend/vercel.json`
+
+---
+
+## 📊 Custos
+
+- **MongoDB Atlas**: Gratuito (512MB, cluster M0)
+- **Vercel Backend**: Gratuito (100GB bandwidth/mês, serverless)
+- **Vercel Frontend**: Gratuito (100GB bandwidth/mês)
+
+**Total: R$ 0,00** 🎉
+
+---
+
+## 🎉 Pronto!
+
+Seu e-commerce Vereco está no ar! 🚀
+
+**URLs do seu projeto:**
+- Frontend: `https://vereco-frontend.vercel.app`
+- Backend: `https://vereco-backend.vercel.app`
+- MongoDB: `cluster0.twfwgex.mongodb.net`
+
+---
+
+## 📝 Próximos Passos (Opcional)
+
+- [ ] Configurar domínio customizado na Vercel (tipo: `www.vereco.com.br`)
+- [ ] Adicionar Vercel Analytics
+- [ ] Configurar email de confirmação (SendGrid)
+- [ ] Implementar pagamentos (Stripe/Mercado Pago)
+- [ ] Adicionar mais produtos via seed
+
+---
+
+## 💡 Dica Pro
+
+**Monitorar logs em tempo real:**
+
+Via Vercel CLI:
+```bash
+# Instalar CLI
+npm i -g vercel
+
+# Ver logs do backend
+vercel logs https://seu-backend.vercel.app
+
+# Ver logs do frontend  
+vercel logs https://seu-frontend.vercel.app
+```
 NODE_ENV=production
 ALLOWED_ORIGINS=https://seu-frontend.vercel.app
 ```

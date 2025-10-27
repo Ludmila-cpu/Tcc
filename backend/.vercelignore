@@ -1,0 +1,17 @@
+# Arquivos de desenvolvimento
+node_modules
+.env
+.env.local
+
+# Scripts de desenvolvimento
+create-user.js
+list-users.js
+START.bat
+instalar.bat
+
+# Documentação
+*.md
+!DEPLOY_VERCEL.md
+
+# Arquivos de teste
+insomnia-collection.json
