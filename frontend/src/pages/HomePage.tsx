@@ -3,29 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import Imagem1 from "../assets/Imagem1.svg";
 import Footer from "../components/Footer";
+import LoginModal from "../components/LoginModal";
 
 const HomePage: React.FC = () => {
   const navigate = useNavigate();
   const { isAuthenticated, user } = useAuth();
   const [showLoginModal, setShowLoginModal] = useState(false);
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-    name: ""
-  });
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Redirecionar para a página de login/produtos
-    navigate(isAuthenticated ? "/produtos" : "/login");
-  };
 
   return (
     <div className="min-h-screen bg-white">
@@ -76,13 +59,13 @@ const HomePage: React.FC = () => {
           ) : (
             <>
               <button
-                onClick={() => navigate("/login")}
+                onClick={() => setShowLoginModal(true)}
                 className="px-5 py-2.5 rounded-lg border-2 border-[#39b54a] bg-transparent text-[#39b54a] text-base cursor-pointer transition-all duration-300 hover:bg-[#39b54a] hover:text-white"
               >
                 Entrar
               </button>
               <button
-                onClick={() => navigate("/login")}
+                onClick={() => setShowLoginModal(true)}
                 className="px-5 py-2.5 rounded-lg border-2 border-[#39b54a] bg-[#39b54a] text-white text-base cursor-pointer transition-all duration-300 hover:bg-[#2e9c3f] hover:border-[#2e9c3f]"
               >
                 Cadastrar
@@ -141,73 +124,7 @@ const HomePage: React.FC = () => {
       </section>
 
       {/* Modal de Login */}
-      {showLoginModal && (
-        <div
-          className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center z-[1000]"
-          onClick={() => setShowLoginModal(false)}
-        >
-          <div
-            className="bg-white rounded-2xl p-10 max-w-md w-full relative shadow-2xl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              className="absolute top-5 right-5 text-3xl text-[#999] cursor-pointer hover:text-[#333]"
-              onClick={() => setShowLoginModal(false)}
-            >
-              ×
-            </button>
-
-            <div className="text-center mb-8">
-              <h2 className="text-2xl text-[#333] mb-2">Bem-vindo de volta!</h2>
-            </div>
-
-            <form onSubmit={handleSubmit} className="space-y-5">
-              <div>
-                <label
-                  className="block text-[#333] mb-2 font-medium"
-                  htmlFor="email"
-                >
-                  Email
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  required
-                  placeholder="Seu email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-3 border border-[#ddd] rounded-lg text-base transition-all duration-300 focus:border-[#39b54a] focus:outline-none"
-                />
-              </div>
-              <div>
-                <label
-                  className="block text-[#333] mb-2 font-medium"
-                  htmlFor="password"
-                >
-                  Senha
-                </label>
-                <input
-                  type="password"
-                  id="password"
-                  name="password"
-                  required
-                  placeholder="Sua senha"
-                  value={formData.password}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-3 border border-[#ddd] rounded-lg text-base transition-all duration-300 focus:border-[#39b54a] focus:outline-none"
-                />
-              </div>
-              <button
-                type="submit"
-                className="w-full bg-[#39b54a] text-white py-3 rounded-lg text-base font-semibold cursor-pointer transition-all duration-300 hover:bg-[#2e9c3f]"
-              >
-                Entrar
-              </button>
-            </form>
-          </div>
-        </div>
-      )}
+      <LoginModal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)} />
 
       <Footer />
     </div>
