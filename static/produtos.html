@@ -25,9 +25,10 @@
                     <img src="assets/cart.svg" alt="Carrinho" class="cart-icon">
                     <span id="cart-count">0</span>
                 </button>
-                <div class="user-menu">
-                    <img src="assets/user.svg" alt="Usuário" class="user-icon">
-                    <span>Minha Conta</span>
+                <!-- Área de autenticação dinâmica -->
+                <div class="nav-buttons">
+                    <button class="nav-btn" onclick="showLoginForm()">Entrar</button>
+                    <a class="nav-btn register" href="cadastro.html">Cadastrar</a>
                 </div>
             </div>
         </nav>
@@ -40,7 +41,122 @@
         <main class="products-container">
             <div id="product-list" class="product-grid"></div>
         </main>
+        
+        <!-- Modal de Login (mesmo da home) -->
+        <div id="loginModal" class="modal">
+            <div class="modal-content">
+                <span class="close-btn" onclick="closeLoginModal()">&times;</span>
+                <div class="modal-header">
+                    <img src="assets/Imagem2.svg" alt="Vereco Logo" class="modal-logo" />
+                    <h2>Bem-vindo de volta!</h2>
+                </div>
+                <form id="loginForm" class="login-form">
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" required placeholder="Seu email" />
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Senha</label>
+                        <input type="password" id="password" required placeholder="Sua senha" />
+                    </div>
+                    <button type="submit" class="login-btn">Entrar</button>
+                </form>
+            </div>
+        </div>
     </div>
+
+    <script>
+        // Setup de login/menus igual ao da home
+        const modal = document.getElementById('loginModal');
+        const navButtons = document.querySelector('.nav-buttons');
+
+        (function highlightActive() {
+            const path = location.pathname.split('/').pop();
+            document.querySelectorAll('.nav-link').forEach(a => {
+                if (a.getAttribute('href') === path) { a.classList.add('active'); }
+            });
+        })();
+
+        function showLoginForm() { if (modal) modal.style.display = 'flex'; }
+        function closeLoginModal() { if (modal) modal.style.display = 'none'; }
+        window.onclick = function (event) { if (event && event.target === modal) closeLoginModal(); }
+
+        function setCurrentUser(user) {
+            try { localStorage.setItem('currentUser', JSON.stringify(user)); } catch {}
+            renderUserMenu();
+        }
+
+        function getCurrentUser() {
+            try { return JSON.parse(localStorage.getItem('currentUser')) || null; } catch { return null; }
+        }
+
+        function logout() {
+            try { localStorage.removeItem('currentUser'); } catch {}
+            try { localStorage.removeItem('token'); } catch {}
+            try { localStorage.removeItem('authToken'); } catch {}
+            try { if (window.API && window.API.TokenManager) window.API.TokenManager.remove(); } catch {}
+            renderUserMenu();
+            if (location.pathname.split('/').pop() !== 'index.html') {
+                window.location.href = 'index.html';
+            }
+        }
+
+        function renderUserMenu() {
+            const user = getCurrentUser();
+            if (!navButtons) return;
+            if (user) {
+                navButtons.innerHTML = `
+                    <div class="user-auth">
+                        <span class="user-welcome">Olá, ${user.name}</span>
+                        <button class="nav-btn" id="logoutBtn">Sair</button>
+                    </div>`;
+                const btn = document.getElementById('logoutBtn');
+                if (btn) btn.addEventListener('click', logout);
+                closeLoginModal();
+            } else {
+                navButtons.innerHTML = `
+                    <button class="nav-btn" onclick="showLoginForm()">Entrar</button>
+                    <a class="nav-btn register" href="cadastro.html">Cadastrar</a>`;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderUserMenu();
+        });
+
+        // Handler do formulário de login
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('loginForm');
+            if (!form) return;
+            form.addEventListener('submit', async function (e) {
+                e.preventDefault();
+                const email = (document.getElementById('email') || {}).value?.trim();
+                const password = (document.getElementById('password') || {}).value?.trim();
+                if (!email || !password) {
+                    alert('Por favor, preencha todos os campos!');
+                    return;
+                }
+                try {
+                    console.log('🔄 Fazendo login em Produtos com base:', (window.API && window.API.getBase && window.API.getBase()) || 'desconhecida');
+                    const data = await window.API.Auth.login({ email, password });
+                    if (!data || !data.token) throw new Error('Resposta inválida do servidor');
+                    try { localStorage.setItem('token', data.token); } catch {}
+                    const userName = email.split('@')[0];
+                    setCurrentUser({
+                        provider: 'email',
+                        email,
+                        name: userName.charAt(0).toUpperCase() + userName.slice(1),
+                        id: 'user_' + Date.now()
+                    });
+                    closeLoginModal();
+                    renderUserMenu();
+                } catch (err) {
+                    console.error('Erro no login:', err);
+                    alert('Erro ao fazer login: ' + err.message);
+                }
+            });
+        });
+    </script>
 
     <script src="./api.js"></script>
     <script src="./script.js"></script>

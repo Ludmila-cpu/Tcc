@@ -51,11 +51,20 @@ app.use('/api/auth/login', authLimiter);
 app.use('/api/auth/register', authLimiter);
 
 // CORS
-const allowedOrigins = process.env.ALLOWED_ORIGINS
-    ? process.env.ALLOWED_ORIGINS.split(',')
-    : ['http://localhost:5173', 'http://localhost:3000'];
+const envOrigins = process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : [];
+const defaultOrigins = ['http://localhost:5173', 'http://localhost:3000', 'http://localhost:8000', 'http://127.0.0.1:8000', 'http://127.0.0.1:5500', 'http://localhost:5500'];
+const staticProdOrigins = ['https://vereco-tcc.vercel.app'];
+const allowedOrigins = new Set([...envOrigins, ...defaultOrigins, ...staticProdOrigins]);
 
-app.use(cors({
+function isOriginAllowed(origin) {
+    if (allowedOrigins.has(origin)) return true;
+    // Permitir deploys de preview do Vercel do front (ex.: https://vereco-tcc-<hash>-<user>.vercel.app)
+    const vercelPreviewRegex = /^https?:\/\/vereco-tcc-[a-z0-9-]+\.[a-z0-9-]+\.vercel\.app$/i;
+    if (vercelPreviewRegex.test(origin)) return true;
+    return false;
+}
+
+const corsOptions = {
     origin: function (origin, callback) {
         // Permitir requisições sem origin (mobile apps, Postman, etc)
         if (!origin) return callback(null, true);
@@ -65,14 +74,21 @@ app.use(cors({
             return callback(null, true);
         }
 
-        if (allowedOrigins.indexOf(origin) !== -1) {
+        if (isOriginAllowed(origin)) {
             callback(null, true);
         } else {
             callback(new Error('CORS não permitido para esta origem'));
         }
     },
-    credentials: true
-}));
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    exposedHeaders: ['Content-Length']
+};
+
+app.use(cors(corsOptions));
+// Responder preflight rapidamente
+app.options('*', cors(corsOptions));
 
 // Body parser
 app.use(express.json());

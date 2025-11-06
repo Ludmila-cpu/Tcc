@@ -102,8 +102,16 @@
         }
 
         function logout() {
-            localStorage.removeItem('currentUser');
+            // Remove dados locais do usuário e tokens
+            try { localStorage.removeItem('currentUser'); } catch { }
+            try { localStorage.removeItem('token'); } catch { }
+            try { localStorage.removeItem('authToken'); } catch { }
+            try { if (window.API && window.API.TokenManager) window.API.TokenManager.remove(); } catch { }
+            // Atualiza menu e volta para a página inicial
             renderUserMenu();
+            if (location.pathname.split('/').pop() !== 'index.html') {
+                window.location.href = 'index.html';
+            }
         }
 
         function renderUserMenu() {
@@ -161,9 +169,9 @@
                     id: 'user_' + Date.now()
                 });
 
-                console.log('✅ Redirecionando...');
+                // Fecha modal e mantém na página atual para o usuário ver o botão de sair
                 try { closeLoginModal(); } catch { }
-                window.location.href = 'produtos.html';
+                renderUserMenu();
             } catch (error) {
                 console.error('❌ Erro completo:', error);
                 alert('Erro ao fazer login: ' + error.message);
