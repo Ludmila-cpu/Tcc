@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import Imagem1 from "../assets/Imagem1.svg";
+import Imagem2 from "../assets/Imagem2.svg";
 // Logo acima do título removido a pedido do usuário
 import Footer from "../components/Footer";
 import LoginModal from "../components/LoginModal";
