@@ -1,0 +1,24 @@
+{
+  "builds": [
+    { "src": "static/**", "use": "@vercel/static" }
+  ],
+  "routes": [
+    { "src": "/assets/(.*)", "dest": "/static/assets/$1" },
+    { "src": "/(.*)\\.html", "dest": "/static/$1.html" },
+    { "src": "/", "dest": "/static/index.html" }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)\\.html",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-cache" }
+      ]
+    },
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+      ]
+    }
+  ]
+}
