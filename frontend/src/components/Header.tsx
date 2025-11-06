@@ -42,7 +42,6 @@ const Header: React.FC = () => {
               className="relative text-gray-700 hover:text-primary font-medium"
             >
               <div className="flex items-center space-x-1">
-                <img src="/cart.svg" alt="Carrinho" className="w-6 h-6" />
                 <span>Carrinho</span>
               </div>
               {itemCount > 0 && (
