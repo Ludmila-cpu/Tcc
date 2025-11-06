@@ -73,7 +73,21 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
       onClose();
       navigate("/produtos");
     } catch (err: any) {
-      const errorMsg = err.message || "Erro ao processar requisição";
+      console.error("❌ Erro detalhado no modal:", err);
+      let errorMsg = "Erro no servidor";
+
+      if (err.response?.data?.msg) {
+        errorMsg = err.response.data.msg;
+      } else if (err.message) {
+        errorMsg = err.message;
+      } else if (!navigator.onLine) {
+        errorMsg = "Sem conexão com a internet";
+      } else if (err.code === "ECONNABORTED" || err.message?.includes("timeout")) {
+        errorMsg = "Tempo de conexão esgotado. Verifique sua internet.";
+      } else if (err.message?.includes("Network Error")) {
+        errorMsg = "Erro de rede. Verifique se o servidor está online.";
+      }
+
       setError(errorMsg);
       toast.error(errorMsg);
     } finally {
