@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import Imagem1 from "../assets/Imagem1.svg";
+import Imagem2 from "../assets/Imagem2.svg";
 import Footer from "../components/Footer";
 import LoginModal from "../components/LoginModal";
 
@@ -14,6 +15,12 @@ const HomePage: React.FC = () => {
     <div className="min-h-screen bg-white">
       {/* Navegação */}
       <nav className="flex justify-between items-center px-[5%] py-5 bg-white shadow-sm sticky top-0 z-50">
+        <div className="flex items-center gap-8">
+          <a href="/" className="flex items-center gap-3 no-underline" aria-label="Vereco - Início">
+            <img src={Imagem2} alt="Vereco Logo" className="h-10 w-auto" />
+            <span className="text-xl font-bold text-[#2d2d2d]">Vereco</span>
+          </a>
+        
         <ul className="flex gap-8 list-none m-0 p-0">
           <li>
             <a
@@ -44,6 +51,7 @@ const HomePage: React.FC = () => {
             </a>
           </li>
         </ul>
+        </div>
 
         <div className="flex gap-4">
           {isAuthenticated && user ? (
