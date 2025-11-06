@@ -18,7 +18,6 @@ const HomePage: React.FC = () => {
         <div className="flex items-center gap-8">
           <a href="/" className="flex items-center gap-3 no-underline" aria-label="Vereco - Início">
             <img src={Imagem2} alt="Vereco Logo" className="h-10 w-auto" />
-            <span className="text-xl font-bold text-[#2d2d2d]">Vereco</span>
           </a>
 
           <ul className="flex gap-8 list-none m-0 p-0">
