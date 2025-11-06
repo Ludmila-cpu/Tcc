@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import Imagem1 from "../assets/Imagem1.svg";
-import Imagem2 from "../assets/Imagem2.svg";
+// Logo acima do título removido a pedido do usuário
 import Footer from "../components/Footer";
 import LoginModal from "../components/LoginModal";
 
@@ -86,7 +86,6 @@ const HomePage: React.FC = () => {
       {/* Hero Section */}
       <section className="flex justify-between items-center px-[10%] py-[60px] bg-gradient-to-br from-[#f8f9fa] to-[#e9ecef]">
         <div className="flex-1 pr-[60px]">
-          <img src={Imagem2} alt="Vereco" className="h-14 w-auto mb-3" />
           <h1 className="text-5xl text-[#333] mb-5 leading-tight">
             Produtos Orgânicos
             <br />
