@@ -59,7 +59,8 @@ const allowedOrigins = new Set([...envOrigins, ...defaultOrigins, ...staticProdO
 function isOriginAllowed(origin) {
     if (allowedOrigins.has(origin)) return true;
     // Permitir deploys de preview do Vercel do front (ex.: https://vereco-tcc-<hash>-<user>.vercel.app)
-    const vercelPreviewRegex = /^https?:\/\/vereco-tcc-[a-z0-9-]+\.[a-z0-9-]+\.vercel\.app$/i;
+    // Ex.: https://vereco-tcc-git-main-usuario.vercel.app ou https://vereco-tcc-abc123.vercel.app
+    const vercelPreviewRegex = /^https?:\/\/vereco-tcc-[a-z0-9-]+\.vercel\.app$/i;
     if (vercelPreviewRegex.test(origin)) return true;
     return false;
 }
