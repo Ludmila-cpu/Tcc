@@ -565,6 +565,12 @@ body {
     padding-right: 60px;
 }
 
+.hero-logo {
+    height: 56px;
+    width: auto;
+    margin-bottom: 12px;
+}
+
 .hero-content h1 {
     font-size: 3rem;
     color: #333;

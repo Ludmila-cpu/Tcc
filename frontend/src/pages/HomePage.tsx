@@ -20,37 +20,37 @@ const HomePage: React.FC = () => {
             <img src={Imagem2} alt="Vereco Logo" className="h-10 w-auto" />
             <span className="text-xl font-bold text-[#2d2d2d]">Vereco</span>
           </a>
-        
-        <ul className="flex gap-8 list-none m-0 p-0">
-          <li>
-            <a
-              href="/"
-              className="text-[#333] no-underline font-medium px-0 py-2 relative hover:text-[#39b54a] border-b-2 border-[#39b54a]"
-            >
-              Início
-            </a>
-          </li>
-          <li>
-            <a
-              href="/produtos"
-              onClick={(e) => {
-                e.preventDefault();
-                navigate("/produtos");
-              }}
-              className="text-[#333] no-underline font-medium px-0 py-2 relative hover:text-[#39b54a]"
-            >
-              Produtos
-            </a>
-          </li>
-          <li>
-            <a
-              href="/sobre"
-              className="text-[#333] no-underline font-medium px-0 py-2 relative hover:text-[#39b54a]"
-            >
-              Sobre Nós
-            </a>
-          </li>
-        </ul>
+
+          <ul className="flex gap-8 list-none m-0 p-0">
+            <li>
+              <a
+                href="/"
+                className="text-[#333] no-underline font-medium px-0 py-2 relative hover:text-[#39b54a] border-b-2 border-[#39b54a]"
+              >
+                Início
+              </a>
+            </li>
+            <li>
+              <a
+                href="/produtos"
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigate("/produtos");
+                }}
+                className="text-[#333] no-underline font-medium px-0 py-2 relative hover:text-[#39b54a]"
+              >
+                Produtos
+              </a>
+            </li>
+            <li>
+              <a
+                href="/sobre"
+                className="text-[#333] no-underline font-medium px-0 py-2 relative hover:text-[#39b54a]"
+              >
+                Sobre Nós
+              </a>
+            </li>
+          </ul>
         </div>
 
         <div className="flex gap-4">
@@ -86,6 +86,7 @@ const HomePage: React.FC = () => {
       {/* Hero Section */}
       <section className="flex justify-between items-center px-[10%] py-[60px] bg-gradient-to-br from-[#f8f9fa] to-[#e9ecef]">
         <div className="flex-1 pr-[60px]">
+          <img src={Imagem2} alt="Vereco" className="h-14 w-auto mb-3" />
           <h1 className="text-5xl text-[#333] mb-5 leading-tight">
             Produtos Orgânicos
             <br />
