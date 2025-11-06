@@ -51,6 +51,12 @@ body {
     width: auto;
 }
 
+.brand-name {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #2d2d2d;
+}
+
 /* Menu principal */
 .nav-menu {
     display: flex;

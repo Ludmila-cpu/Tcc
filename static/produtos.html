@@ -12,7 +12,10 @@
     <div class="site-container">
         <nav class="home-nav">
             <div class="nav-left">
-                <img src="assets/Imagem2.svg" alt="Vereco Logo" class="nav-logo">
+                <a href="index.html" class="brand" aria-label="Vereco - Início" style="display:flex;align-items:center;gap:.75rem;text-decoration:none;">
+                    <img src="assets/Imagem2.svg" alt="Vereco Logo" class="nav-logo">
+                    <span class="brand-name">Vereco</span>
+                </a>
                 <ul class="nav-menu">
                     <li><a href="index.html" class="nav-link">Início</a></li>
                     <li><a href="produtos.html" class="nav-link active">Produtos</a></li>
@@ -41,7 +44,7 @@
         <main class="products-container">
             <div id="product-list" class="product-grid"></div>
         </main>
-        
+
         <!-- Modal de Login (mesmo da home) -->
         <div id="loginModal" class="modal">
             <div class="modal-content">
@@ -82,7 +85,7 @@
         window.onclick = function (event) { if (event && event.target === modal) closeLoginModal(); }
 
         function setCurrentUser(user) {
-            try { localStorage.setItem('currentUser', JSON.stringify(user)); } catch {}
+            try { localStorage.setItem('currentUser', JSON.stringify(user)); } catch { }
             renderUserMenu();
         }
 
@@ -91,10 +94,10 @@
         }
 
         function logout() {
-            try { localStorage.removeItem('currentUser'); } catch {}
-            try { localStorage.removeItem('token'); } catch {}
-            try { localStorage.removeItem('authToken'); } catch {}
-            try { if (window.API && window.API.TokenManager) window.API.TokenManager.remove(); } catch {}
+            try { localStorage.removeItem('currentUser'); } catch { }
+            try { localStorage.removeItem('token'); } catch { }
+            try { localStorage.removeItem('authToken'); } catch { }
+            try { if (window.API && window.API.TokenManager) window.API.TokenManager.remove(); } catch { }
             renderUserMenu();
             if (location.pathname.split('/').pop() !== 'index.html') {
                 window.location.href = 'index.html';
@@ -140,7 +143,7 @@
                     console.log('🔄 Fazendo login em Produtos com base:', (window.API && window.API.getBase && window.API.getBase()) || 'desconhecida');
                     const data = await window.API.Auth.login({ email, password });
                     if (!data || !data.token) throw new Error('Resposta inválida do servidor');
-                    try { localStorage.setItem('token', data.token); } catch {}
+                    try { localStorage.setItem('token', data.token); } catch { }
                     const userName = email.split('@')[0];
                     setCurrentUser({
                         provider: 'email',
