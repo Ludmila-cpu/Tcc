@@ -4,6 +4,7 @@ import { Toaster } from "react-hot-toast";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import { CartProvider } from "./contexts/CartContext";
 import HomePage from "./pages/HomePage";
+import AboutPage from "./pages/AboutPage";
 import ProductsPage from "./pages/ProductsPage";
 import CartPage from "./pages/CartPage";
 import PaymentPage from "./pages/PaymentPage";
@@ -30,6 +31,7 @@ const AppRoutes: React.FC = () => {
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
+      <Route path="/sobre" element={<AboutPage />} />
       <Route
         path="/produtos"
         element={

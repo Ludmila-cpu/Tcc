@@ -45,6 +45,10 @@ const HomePage: React.FC = () => {
             <li>
               <a
                 href="/sobre"
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigate("/sobre");
+                }}
                 className="text-[#333] no-underline font-medium px-0 py-2 relative hover:text-[#39b54a]"
               >
                 Sobre Nós
