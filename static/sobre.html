@@ -12,18 +12,20 @@
     <div class="site-container">
         <nav class="home-nav">
             <div class="nav-left">
-                <img src="assets/Imagem2.svg" alt="Vereco Logo" class="nav-logo" />
-                <ul class="nav-menu">
+                <a href="index.html" class="brand" aria-label="Vereco - Início"
+                    style="display:flex;align-items:center;gap:.75rem;text-decoration:none;">
+                    <img src="assets/Imagem2.svg" alt="Vereco Logo" class="nav-logo" />
+                </a>
+                <ul class="nav-menu" style="list-style:none; display:flex; gap:2rem; margin:0; padding:0;">
                     <li><a href="index.html" class="nav-link">Início</a></li>
                     <li><a href="produtos.html" class="nav-link">Produtos</a></li>
+                    <li><a href="historico.html" class="nav-link">Meus Pedidos</a></li>
                     <li><a href="sobre.html" class="nav-link active">Sobre Nós</a></li>
                 </ul>
             </div>
-            <div class="nav-right">
-                <button class="cart-btn" onclick="window.location.href='carrinho.html'">
-                    <img src="assets/cart.svg" alt="Carrinho" class="cart-icon" />
-                    <span id="cart-count">0</span>
-                </button>
+            <div class="nav-buttons">
+                <button class="nav-btn" onclick="showLoginForm()">Entrar</button>
+                <a class="nav-btn register" href="cadastro.html">Cadastrar</a>
             </div>
         </nav>
 
@@ -86,10 +88,120 @@
                 </div>
             </section>
         </main>
+
+        <!-- Modal de Login -->
+        <div id="loginModal" class="modal">
+            <div class="modal-content">
+                <span class="close-btn" onclick="closeLoginModal()">&times;</span>
+                <div class="modal-header">
+                    <img src="assets/Imagem2.svg" alt="Vereco Logo" class="modal-logo" />
+                    <h2>Bem-vindo de volta!</h2>
+                </div>
+                <form id="loginForm" class="login-form">
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" required placeholder="Seu email" />
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Senha</label>
+                        <input type="password" id="password" required placeholder="Sua senha" />
+                    </div>
+                    <button type="submit" class="login-btn">Entrar</button>
+                </form>
+            </div>
+        </div>
     </div>
 
-    <script src="api.js"></script>
-    <script src="script.js"></script>
+    <script>
+        const modal = document.getElementById('loginModal');
+        const navButtons = document.querySelector('.nav-buttons');
+
+        function showLoginForm() { modal.style.display = 'flex'; }
+        function closeLoginModal() { modal.style.display = 'none'; }
+        window.onclick = function (event) { if (event.target === modal) closeLoginModal(); }
+
+        function setCurrentUser(user) {
+            localStorage.setItem('currentUser', JSON.stringify(user));
+            renderUserMenu();
+        }
+
+        function getCurrentUser() {
+            try { return JSON.parse(localStorage.getItem('currentUser')) || null; } catch { return null; }
+        }
+
+        function logout() {
+            try { localStorage.removeItem('currentUser'); } catch { }
+            try { localStorage.removeItem('token'); } catch { }
+            try { localStorage.removeItem('authToken'); } catch { }
+            try { if (window.API && window.API.TokenManager) window.API.TokenManager.remove(); } catch { }
+            renderUserMenu();
+            window.location.href = 'index.html';
+        }
+
+        function renderUserMenu() {
+            const user = getCurrentUser();
+            if (!navButtons) return;
+            if (user) {
+                navButtons.innerHTML = `
+                    <div class="user-auth">
+                        <span class="user-welcome">Olá, ${user.name}</span>
+                        <button class="nav-btn" id="logoutBtn">Sair</button>
+                    </div>`;
+                document.getElementById('logoutBtn').addEventListener('click', logout);
+                closeLoginModal();
+            } else {
+                navButtons.innerHTML = `
+                    <button class="nav-btn" onclick="showLoginForm()">Entrar</button>
+                    <a class="nav-btn register" href="cadastro.html">Cadastrar</a>`;
+            }
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const emailInput = document.getElementById('email');
+            const passwordInput = document.getElementById('password');
+
+            if (!emailInput || !passwordInput) {
+                alert('Erro: Campos não encontrados!');
+                return;
+            }
+
+            const email = emailInput.value.trim();
+            const password = passwordInput.value.trim();
+
+            if (!email || !password) {
+                alert('Por favor, preencha todos os campos!');
+                return;
+            }
+
+            try {
+                console.log('🔄 Fazendo login...');
+                const data = await window.API.Auth.login({ email, password });
+                if (!data || !data.token) {
+                    throw new Error('Resposta inválida do servidor');
+                }
+                try { localStorage.setItem('token', data.token); } catch { }
+                console.log('✅ Login realizado');
+
+                const userName = email.split('@')[0];
+                setCurrentUser({
+                    provider: 'email',
+                    email: email,
+                    name: userName.charAt(0).toUpperCase() + userName.slice(1),
+                    id: 'user_' + Date.now()
+                });
+
+                try { closeLoginModal(); } catch { }
+                renderUserMenu();
+            } catch (error) {
+                console.error('❌ Erro completo:', error);
+                alert('Erro ao fazer login: ' + error.message);
+            }
+        });
+
+        renderUserMenu();
+    </script>
+    <script src="./api.js"></script>
 </body>
 
 </html>
