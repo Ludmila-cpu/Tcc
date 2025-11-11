@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import { isValidEmail } from "../utils/formatters";
@@ -7,13 +7,14 @@ import toast from "react-hot-toast";
 interface LoginModalProps {
   isOpen: boolean;
   onClose: () => void;
+  initialMode?: "login" | "register";
 }
 
-const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
+const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, initialMode = "login" }) => {
   const navigate = useNavigate();
   const { login, register } = useAuth();
 
-  const [isLogin, setIsLogin] = useState(true);
+  const [isLogin, setIsLogin] = useState(initialMode === "login");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -22,6 +23,15 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
     email: "",
     password: ""
   });
+
+  // Resetar modo quando o modal abrir com um novo initialMode
+  useEffect(() => {
+    if (isOpen) {
+      setIsLogin(initialMode === "login");
+      setFormData({ name: "", email: "", password: "" });
+      setError("");
+    }
+  }, [isOpen, initialMode]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({

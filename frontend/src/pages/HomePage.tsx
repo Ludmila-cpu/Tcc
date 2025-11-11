@@ -11,6 +11,17 @@ const HomePage: React.FC = () => {
   const navigate = useNavigate();
   const { isAuthenticated, user } = useAuth();
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const [loginModalMode, setLoginModalMode] = useState<"login" | "register">("login");
+
+  const openLoginModal = () => {
+    setLoginModalMode("login");
+    setShowLoginModal(true);
+  };
+
+  const openRegisterModal = () => {
+    setLoginModalMode("register");
+    setShowLoginModal(true);
+  };
 
   return (
     <div className="min-h-screen bg-white">
@@ -71,13 +82,13 @@ const HomePage: React.FC = () => {
           ) : (
             <>
               <button
-                onClick={() => setShowLoginModal(true)}
+                onClick={openLoginModal}
                 className="px-5 py-2.5 rounded-lg border-2 border-[#39b54a] bg-transparent text-[#39b54a] text-base cursor-pointer transition-all duration-300 hover:bg-[#39b54a] hover:text-white"
               >
                 Entrar
               </button>
               <button
-                onClick={() => setShowLoginModal(true)}
+                onClick={openRegisterModal}
                 className="px-5 py-2.5 rounded-lg border-2 border-[#39b54a] bg-[#39b54a] text-white text-base cursor-pointer transition-all duration-300 hover:bg-[#2e9c3f] hover:border-[#2e9c3f]"
               >
                 Cadastrar
@@ -136,7 +147,11 @@ const HomePage: React.FC = () => {
       </section>
 
       {/* Modal de Login */}
-      <LoginModal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)} />
+      <LoginModal 
+        isOpen={showLoginModal} 
+        onClose={() => setShowLoginModal(false)} 
+        initialMode={loginModalMode}
+      />
 
       <Footer />
     </div>
